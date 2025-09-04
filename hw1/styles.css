@@ -581,11 +581,31 @@ section:hover h2::after {
     border-radius: 10px;
     border-left: 3px solid #ffd700;
     transition: all 0.3s ease;
+    align-items: center;
 }
 
 .achievement-item:hover {
     background: var(--bg-glass-hover);
     transform: translateX(10px);
+}
+
+.achievement-logo {
+    flex-shrink: 0;
+}
+
+.achievement-logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    transition: all 0.3s ease;
+}
+
+.achievement-logo img:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .achievement-year {
@@ -802,6 +822,12 @@ footer {
     .achievement-item {
         flex-direction: column;
         text-align: center;
+        gap: 10px;
+    }
+    
+    .achievement-logo img {
+        width: 40px;
+        height: 40px;
     }
     
     .achievement-year {
