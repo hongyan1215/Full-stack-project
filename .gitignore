@@ -5,7 +5,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # TypeScript
-*.ts
+# *.ts  # 保留 TypeScript 原始碼
 !*.d.ts
 
 # Build outputs
