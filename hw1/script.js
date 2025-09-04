@@ -1,3 +1,4 @@
+"use strict";
 // Typing animation for bio
 class TypeWriter {
     constructor(element, texts, typeSpeed = 100, deleteSpeed = 50, pauseTime = 2000) {
@@ -234,12 +235,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add click effects to link cards
     document.querySelectorAll('.link-card').forEach(card => {
         card.addEventListener('click', function (e) {
+            const mouseEvent = e;
             // Create enhanced ripple effect for circular buttons
             const ripple = document.createElement('span');
             const rect = this.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height) * 1.2;
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
+            const x = mouseEvent.clientX - rect.left - size / 2;
+            const y = mouseEvent.clientY - rect.top - size / 2;
             ripple.style.cssText = `
                 position: absolute;
                 left: ${x}px;
