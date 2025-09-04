@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黃泓諺 - Physician & Computer Science Student</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .link-card {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <canvas id="particles-canvas"></canvas>
+    
+    <div class="container">
+        <header>
+            <div class="profile">
+                <img src="校徽/Kiroz Profile Image.png" alt="黃泓諺個人頭像" class="avatar">
+                <h1>黃泓諺</h1>
+                <p class="bio"><span id="typed-text"></span><span class="cursor">|</span></p>
+            </div>
+        </header>
+        
+        <main>
+            <section class="links fade-in">
+                <a href="https://github.com/hongyan1215" class="link-card github fade-in" style="transition-delay: 0s;">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+                <a href="mailto:hongyan1215@gmail.com" class="link-card email fade-in" style="transition-delay: 0s;">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact Me</span>
+                </a>
+            </section>
+            
+            <section class="about fade-in">
+                <h2>About Me</h2>
+                <ul>
+                    <li>Hi, I'm 黃泓諺 (Hongyan Huang).</li>
+                    <li>Physician, currently pursuing a Master's degree in Computer Science at NTU.</li>
+                    <li>Focus: Information Retrieval, combining medical expertise with computer science.</li>
+                    <li>Goal: explore cross-disciplinary research and innovation between medicine and technology.</li>
+                    <li>Outside academics: enjoy running, fitness, traveling, and anime.</li>
+                </ul>
+            </section>
+            
+            <section class="education fade-in">
+                <h2>Education & Experience</h2>
+                <div class="education-timeline">
+                    <div class="education-item">
+                        <div class="education-logo">
+                            <img src="校徽/NTU icon.jpg" alt="NTU">
+                        </div>
+                        <div class="education-content">
+                            <h3>National Taiwan University (NTU)</h3>
+                            <p class="degree">M.S., Institute of Computer Science and Engineering (2025 – present)</p>
+                            <p class="year">2025 - present</p>
+                            <p>Information Retrieval Laboratory</p>
+                            <p class="advisor">Research Area: Information Retrieval</p>
+                        </div>
+                    </div>
+                    
+                    <div class="education-item">
+                        <div class="education-logo">
+                            <img src="校徽/ncku icon.jpg" alt="NCKU">
+                        </div>
+                        <div class="education-content">
+                            <h3>National Cheng Kung University (NCKU) & NCKU Hospital (NCKUH)</h3>
+                            <p class="degree">M.D. Degree & Physician License (2020 – 2025)</p>
+                            <p class="year">2020 - 2025</p>
+                            <p>Clinical training across multiple specialties</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="achievements fade-in">
+                <h2>Achievements & Awards</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-item">
+                        <div class="achievement-year">2015</div>
+                        <div class="achievement-content">
+                            <h3>IJSO Gold Medal</h3>
+                            <p>International Junior Science Olympiad</p>
+                        </div>
+                    </div>
+                    
+                    <div class="achievement-item">
+                        <div class="achievement-year">2020</div>
+                        <div class="achievement-content">
+                            <h3>iGEM Gold Medal</h3>
+                            <p>International Genetically Engineered Machine Competition</p>
+                            <a href="https://2020.igem.org/Team:NCKU_Tainan" class="achievement-link" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> View Project
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="achievement-item">
+                        <div class="achievement-year">2021-2022</div>
+                        <div class="achievement-content">
+                            <h3>CIO</h3>
+                            <p>FMSTW Medical Student Association</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="skills-interests fade-in">
+                <h2>Skills & Interests</h2>
+                <div class="skills-grid">
+                    <div class="skills-category">
+                        <h3>Technical Skills</h3>
+                        <div class="skills-list">
+                            <span class="skill-item">Programming: C++, Python, Git/GitHub, LaTeX</span>
+                            <span class="skill-item">AI & Data: Machine Learning, Information Retrieval, Medical AI</span>
+                            <span class="skill-item">Medicine: Licensed physician with clinical training</span>
+                        </div>
+                    </div>
+                    <div class="skills-category">
+                        <h3>Interests</h3>
+                        <div class="skills-list">
+                            <span class="skill-item">Running & Fitness</span>
+                            <span class="skill-item">Anime & Digital Art</span>
+                            <span class="skill-item">Travel & Cultural Exploration</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2025 黃泓諺. Built with Cursor.</p>
+            <div class="social-links">
+                <a href="https://github.com/hongyan1215"><i class="fab fa-github"></i></a>
+                <a href="mailto:hongyan1215@gmail.com"><i class="fas fa-envelope"></i></a>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="mouse-follower"></div>
+    <script src="script.js"></script>
+</body>
+</html>
