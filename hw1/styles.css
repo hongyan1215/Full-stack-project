@@ -569,54 +569,101 @@ section:hover h2::after {
 
 .achievements-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
 }
 
-.achievement-item {
-    display: flex;
-    gap: 15px;
-    padding: 20px;
+.achievement-card {
+    position: relative;
     background: var(--bg-glass);
-    border-radius: 10px;
-    border-left: 3px solid #ffd700;
-    transition: all 0.3s ease;
-    align-items: center;
+    border-radius: 15px;
+    padding: 25px;
+    border-left: 4px solid #ffd700;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    backdrop-filter: blur(15px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.achievement-item:hover {
+.achievement-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.achievement-card:hover::before {
+    left: 100%;
+}
+
+.achievement-card:hover {
     background: var(--bg-glass-hover);
-    transform: translateX(10px);
+    transform: translateY(-8px);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(255, 215, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.achievement-logo {
-    flex-shrink: 0;
+.achievement-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
-.achievement-logo img {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
+.achievement-icon img {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
     object-fit: contain;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 5px;
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.achievement-logo img:hover {
-    transform: scale(1.1);
-    background: rgba(255, 255, 255, 0.2);
+.achievement-icon img:hover {
+    transform: scale(1.1) rotate(2deg);
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.achievement-info {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.achievement-info h3 {
+    color: var(--text-accent);
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.achievement-info p {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    line-height: 1.5;
 }
 
 .achievement-year {
-    font-size: 1.2rem;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    font-size: 1.1rem;
     font-weight: bold;
     color: #ffd700;
-    min-width: 80px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    backdrop-filter: blur(5px);
 }
 
 .achievement-content h3 {
@@ -817,21 +864,27 @@ footer {
     
     .achievements-grid {
         grid-template-columns: 1fr !important;
+        gap: 20px !important;
     }
     
-    .achievement-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
+    .achievement-card {
+        padding: 20px;
     }
     
-    .achievement-logo img {
-        width: 40px;
-        height: 40px;
+    .achievement-icon img {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .achievement-info h3 {
+        font-size: 1.2rem;
     }
     
     .achievement-year {
-        min-width: auto;
+        position: static;
+        margin-top: 15px;
+        text-align: center;
+        display: inline-block;
     }
     
     .avatar {
