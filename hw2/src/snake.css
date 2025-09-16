@@ -201,9 +201,10 @@ button:active {
     z-index: 10;
     display: none;
     backdrop-filter: blur(5px);
-    padding: 20px;
+    padding: 20px 20px 60px 20px;
     overflow-y: auto;
     max-height: 100vh;
+    box-sizing: border-box;
 }
 
 .upgrade-screen h2 {
@@ -246,9 +247,10 @@ button:active {
 
 #close-upgrade {
     width: 200px;
-    margin-top: 30px;
+    margin: 30px 0 20px 0;
     background: linear-gradient(135deg, #ff6b6b 0%, #ef476f 100%);
     box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    flex-shrink: 0;
 }
 
 #close-upgrade:hover {
@@ -412,7 +414,17 @@ button:active {
     .game-over p { font-size: 1.2rem; }
     .upgrade-coin-display { font-size: 1rem; }
     .upgrade-footer { padding: 10px 0; }
-    #close-upgrade { width: 150px; }
+    #close-upgrade { 
+        width: 150px; 
+        margin: 20px 0 15px 0;
+    }
+    .upgrade-screen {
+        padding: 15px 15px 50px 15px;
+    }
+    .upgrade-section {
+        margin: 15px 0;
+        padding: 15px;
+    }
     .food-chance-item { min-width: 100px; font-size: 0.9rem; }
     .game-status { top: 5px; left: 5px; }
     .speed-status { font-size: 0.8rem; padding: 3px 8px; }
