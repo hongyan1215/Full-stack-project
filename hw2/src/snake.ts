@@ -29,6 +29,7 @@ export default class SnakeGame {
         this.gamePaused = false;
         this.gameLoop = null;
         this.baseSpeed = 100;
+        this.currentLoopDelay = this.baseSpeed;
         this.speedEffectTimer = null;
         this.gameStartTime = 0;
         this.upgradeLevels = {
@@ -194,6 +195,24 @@ export default class SnakeGame {
         this.touchEndY = 0;
         this.touchThreshold = 30;
     }
+    /**
+     * Compute current base speed (interval delay in ms) based on score tiers.
+     */
+    getCurrentBaseSpeed() {
+        let speedReduction = 0;
+        if (this.score >= 2000) speedReduction = 50; else if (this.score >= 1000) speedReduction = 40; else if (this.score >= 500) speedReduction = 30; else if (this.score >= 300) speedReduction = 20; else if (this.score >= 100) speedReduction = 10;
+        return Math.max(50, this.baseSpeed - speedReduction);
+    }
+    /**
+     * Centralized scheduler for the game loop.
+     */
+    setGameLoop(delayMs) {
+        if (this.gameLoop) { clearInterval(this.gameLoop); this.gameLoop = null; }
+        this.currentLoopDelay = delayMs;
+        this.gameLoop = setInterval(() => {
+            if (this.gameActive && !this.gamePaused) { this.update(); }
+        }, delayMs);
+    }
     stop() {
         this.gameActive = false;
         this.gamePaused = true;
@@ -301,30 +320,19 @@ export default class SnakeGame {
         this.generateFood();
         this.gameOverScreen.style.display = 'none';
         this.startBtn.textContent = '重新開始';
-        clearInterval(this.gameLoop);
-        this.gameLoop = setInterval(() => {
-            if (this.gameActive && !this.gamePaused) {
-                this.update();
-            }
-        }, this.baseSpeed);
+        // Do not overwrite the loop set by updateScore(); it already set proper speed.
     }
     restartGame() {
-        if (this.gameLoop) { clearInterval(this.gameLoop); this.gameLoop = null; }
+        this.stop();
         if (this.speedEffectTimer) { clearTimeout(this.speedEffectTimer); this.speedEffectTimer = null; }
         this.snake = [{x: 5, y: 5}];
         this.direction = 'right';
         this.nextDirection = 'right';
         this.score = 0;
-        this.gameActive = false;
         this.gamePaused = false;
         this.gameStartTime = 0;
         this.speedStatusElement.textContent = '';
         this.speedStatusElement.className = 'speed-status';
-        clearInterval(this.gameLoop);
-        this.gameLoop = setInterval(() => {
-            if (this.gameActive && !this.gamePaused) { this.update(); }
-        }, this.baseSpeed);
-        this.updateScore();
         this.highScoreElement.textContent = this.highScore;
         this.highScoreTitleElement.textContent = this.highScoreTitle;
         this.coinsElement.textContent = this.coins;
@@ -336,8 +344,8 @@ export default class SnakeGame {
         if (!this.gameActive) return;
         this.gamePaused = !this.gamePaused;
         this.pauseBtn.textContent = this.gamePaused ? '繼續' : '暫停';
-        if (this.gamePaused) { clearInterval(this.gameLoop); }
-        else { this.gameLoop = setInterval(() => this.update(), this.baseSpeed); }
+        if (this.gamePaused) { if (this.gameLoop) { clearInterval(this.gameLoop); this.gameLoop = null; } }
+        else { this.setGameLoop(this.currentLoopDelay || this.getCurrentBaseSpeed()); }
     }
     handleKeyPress(e) {
         if (!this.gameActive || this.gamePaused) return;
@@ -398,17 +406,15 @@ export default class SnakeGame {
             if (this.score >= 2000) speedReduction = 50; else if (this.score >= 1000) speedReduction = 40; else if (this.score >= 500) speedReduction = 30; else if (this.score >= 300) speedReduction = 20; else if (this.score >= 100) speedReduction = 10;
             const currentBaseSpeed = Math.max(50, this.baseSpeed - speedReduction);
             const effectSpeed = currentBaseSpeed + speedEffect;
-            clearInterval(this.gameLoop);
-            this.gameLoop = setInterval(() => { if (this.gameActive && !this.gamePaused) { this.update(); } }, effectSpeed);
+            this.setGameLoop(effectSpeed);
             this.speedStatusElement.textContent = statusText;
             this.speedStatusElement.className = 'speed-status ' + (speedEffect < 0 ? 'fast' : 'slow');
             this.speedEffectTimer = setTimeout(() => {
                 if (this.gameActive) {
-                    clearInterval(this.gameLoop);
                     let speedReduction = 0;
                     if (this.score >= 2000) speedReduction = 50; else if (this.score >= 1000) speedReduction = 40; else if (this.score >= 500) speedReduction = 30; else if (this.score >= 300) speedReduction = 20; else if (this.score >= 100) speedReduction = 10;
                     const currentSpeed = Math.max(50, this.baseSpeed - speedReduction);
-                    this.gameLoop = setInterval(() => { if (this.gameActive && !this.gamePaused) { this.update(); } }, currentSpeed);
+                    this.setGameLoop(currentSpeed);
                     this.speedStatusElement.textContent = '';
                     this.speedStatusElement.className = 'speed-status';
                     this.speedEffectTimer = null;
@@ -495,10 +501,7 @@ export default class SnakeGame {
         let speedReduction = 0;
         if (this.score >= 2000) speedReduction = 50; else if (this.score >= 1000) speedReduction = 40; else if (this.score >= 500) speedReduction = 30; else if (this.score >= 300) speedReduction = 20; else if (this.score >= 100) speedReduction = 10;
         const currentSpeed = Math.max(50, this.baseSpeed - speedReduction);
-        if (!this.speedEffectTimer) {
-            clearInterval(this.gameLoop);
-            this.gameLoop = setInterval(() => { if (this.gameActive && !this.gamePaused) { this.update(); } }, currentSpeed);
-        }
+        if (!this.speedEffectTimer) { this.setGameLoop(currentSpeed); }
     }
     getSnakeColor() {
         let color = this.snakeColors[0];
@@ -519,9 +522,7 @@ export default class SnakeGame {
         this.gameStartTime = 0;
         this.speedStatusElement.textContent = '';
         this.speedStatusElement.className = 'speed-status';
-        clearInterval(this.gameLoop);
-        this.gameLoop = setInterval(() => { if (this.gameActive && !this.gamePaused) { this.update(); } }, this.baseSpeed);
-        this.updateScore();
+        // Do not schedule loop here; startGame() will handle it via updateScore().
         this.highScoreElement.textContent = this.highScore;
         this.highScoreTitleElement.textContent = this.highScoreTitle;
         this.coinsElement.textContent = this.coins;
