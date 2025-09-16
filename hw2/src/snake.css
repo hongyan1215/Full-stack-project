@@ -321,18 +321,6 @@ button:active {
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
 }
 
-/* Clear data button */
-#clear-data {
-    width: 100%;
-    margin-top: 10px;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ef476f 100%);
-    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-}
-
-#clear-data:hover {
-    box-shadow: 0 0 15px rgba(255, 107, 107, 0.7);
-}
-
 @media (max-width: 650px) {
     .game-container {
         width: 95%;

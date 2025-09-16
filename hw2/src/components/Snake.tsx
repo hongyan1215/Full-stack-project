@@ -96,10 +96,6 @@ export default function Snake() {
         <div className="upgrade-section">
           <button id="reroll-chances">重新抽取機率 (200金幣)</button>
         </div>
-        <div className="upgrade-section">
-          <h3>資料管理</h3>
-          <button id="clear-data">清除資料</button>
-        </div>
         <button id="close-upgrade">關閉</button>
       </div>
     </div>

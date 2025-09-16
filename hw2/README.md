@@ -22,7 +22,7 @@ npm install
 ```bash
 npm run dev
 ```
-啟動後依終端顯示之網址（通常是 http://localhost:5173/）在瀏覽器開啟。
+啟動後依終端顯示之網址（通常是 http://localhost:5173/ ）在瀏覽器開啟。
 
 ## 遊戲玩法（貪食蛇 Snake）
 
@@ -64,5 +64,4 @@ npm run dev
 
 ### 其他
 - 本遊戲為純前端 React + TypeScript（Vite）實作，遊戲資料（最高分、金幣、升級）儲存在瀏覽器 localStorage。
-- 若遇到顯示或資料異常，可嘗試在升級商店中使用清除資料按鈕（如有顯示）。
 
