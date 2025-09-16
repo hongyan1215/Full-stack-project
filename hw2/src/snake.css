@@ -206,6 +206,14 @@ button:active {
     max-height: 100vh;
 }
 
+.upgrade-screen h2 {
+    color: #4ecdc4;
+    font-size: 2.2rem;
+    margin: 10px 0 30px 0;
+    text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+    text-align: center;
+}
+
 .upgrade-coin-display {
     width: 100%;
     max-width: 500px;
@@ -238,12 +246,83 @@ button:active {
 
 #close-upgrade {
     width: 200px;
+    margin-top: 30px;
     background: linear-gradient(135deg, #ff6b6b 0%, #ef476f 100%);
     box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
 }
 
 #close-upgrade:hover {
     box-shadow: 0 0 15px rgba(255, 107, 107, 0.7);
+}
+
+/* 升級商店佈局改善 */
+.upgrade-section {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.upgrade-section h3 {
+    margin: 0 0 15px 0;
+    color: #4ecdc4;
+    text-align: center;
+    font-size: 1.3rem;
+    text-shadow: 0 0 5px rgba(78, 205, 196, 0.5);
+}
+
+.upgrade-item {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    text-align: center;
+}
+
+.upgrade-item span {
+    padding: 8px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.1rem;
+}
+
+.food-info {
+    margin-bottom: 20px;
+}
+
+.food-type {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    margin: 8px 0;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.food-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.upgrade-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.upgrade-buttons button {
+    width: 100%;
+    max-width: 280px;
+    margin: 0;
 }
 
 .coin-container {
@@ -313,6 +392,7 @@ button:active {
 
 #reroll-chances {
     width: 100%;
+    max-width: 280px;
     background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
