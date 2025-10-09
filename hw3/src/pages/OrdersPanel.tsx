@@ -25,15 +25,15 @@ export default function OrdersPanel() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      {/* Header with back button and title */}
-      <div className="flex items-center gap-4 mb-6">
+      {/* Header with title and back button */}
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="font-display text-3xl">Orders</h1>
         <Button asChild variant="ghost" className="bg-[color:var(--glass)]/60 hover:bg-[color:var(--glass)] border border-white/8 rounded-2xl">
           <Link to="/" className="flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
             Back to Browse
           </Link>
         </Button>
-        <h1 className="font-display text-3xl">Orders</h1>
       </div>
       
       {orders.length === 0 ? (
