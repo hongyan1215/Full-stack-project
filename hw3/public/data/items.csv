@@ -1,0 +1,26 @@
+id,name,category,price,description,image_url,tags,rating,stock,location,opening_hours
+101,Strawberry Mille-Feuille,Pastry,220,Crispy layers with vanilla cream and fresh strawberries,https://images.unsplash.com/photo-1593424718424-cf4d83f3def1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D,"strawberry,flaky,signature",4.8,12,Taipei,10:00-21:00
+102,Matcha Roll Cake,Cake,180,Soft sponge with Uji matcha cream,https://cdn.pixabay.com/photo/2017/10/12/13/13/cake-2844572_1280.jpg,"matcha,light,sponge",4.6,8,Taipei,10:00-21:00
+103,Classic Croissant,Pastry,95,Buttery flaky layers baked daily,https://cdn.pixabay.com/photo/2019/03/24/14/23/bread-4077812_1280.jpg,"buttery,classic",4.7,30,New Taipei,08:00-18:00
+104,Caramel Latte,Coffee,140,Balanced espresso with house caramel syrup,https://cdn.pixabay.com/photo/2017/11/11/20/16/food-2940312_1280.jpg,"latte,sweet",4.5,40,Taipei,08:00-22:00
+105,Raspberry Macarons (Box of 6),Macaron,190,"Tangy raspberry ganache, box of six",https://cdn.pixabay.com/photo/2017/07/28/14/29/macarons-2548827_1280.jpg,"macaron,raspberry,gift",4.4,20,Taoyuan,11:00-20:00
+106,Yuzu Cheesecake,Cake,220,Baked cheesecake with Japanese yuzu zest,https://cdn.pixabay.com/photo/2020/04/07/15/39/yuzu-cheesecake-5013879_1280.jpg,"citrus,cheesecake,refreshing",4.6,10,Taipei,11:00-21:00
+107,Sea Salt Caramel Tart,Tart,160,Velvety caramel with a pinch of sea salt,https://i.postimg.cc/dtX3sFNc/seesalttart.png,"caramel,tart,salty-sweet",4.7,15,Hsinchu,12:00-20:00
+108,Pistachio Eclair,Pastry,150,Choux pastry with pistachio custard,https://i.postimg.cc/dtDDc3BF/Pistachio-Eclair.png,"pistachio,choux",4.5,18,Taichung,10:00-19:00
+109,Caffe Latte,Coffee,120,Smooth milk and double shot espresso,https://i.postimg.cc/cCPWSxxH/caffe-latte.png,"latte,classic",4.3,60,Tainan,08:00-22:00
+110,Dark Chocolate Mousse,Cake,200,70% cacao mousse with cocoa nib crunch,https://i.postimg.cc/0yRvXyH8/Dark-Chocolate-Mousse.png,"chocolate,mousse,rich",4.8,9,Kaohsiung,12:00-21:30
+111,Vanilla Bean Panna Cotta,Dessert,150,Silky panna cotta with vanilla bean,https://i.postimg.cc/fLGZ4WTy/Vanilla.png,"pannacotta,vanilla,light",4.4,16,Taipei,12:00-21:00
+112,Blueberry Yogurt Parfait,Dessert,140,"Greek yogurt, granola, local blueberries",https://i.postimg.cc/cJ50mMp3/BYP.png,"yogurt,blueberry,brunch",4.2,25,New Taipei,09:00-17:00
+113,Almond Croissant,Pastry,110,"Frangipane-filled croissant, powdered sugar",https://i.postimg.cc/bwgzGjLW/AC.png,"almond,frangipane",4.6,22,Hsinchu,08:30-18:00
+114,Tiramisu,Cake,190,"Mascarpone, espresso-soaked ladyfingers",https://i.postimg.cc/9MRVNwVQ/TR.png,"coffee,mascarpone,classic",4.7,14,Taichung,12:00-21:00
+115,Black Sesame Roll,Cake,170,Aromatic black sesame cream roll,https://i.postimg.cc/XvD48cRw/BSR.png,"sesame,asian",4.5,12,Tainan,11:00-20:00
+116,Hojicha Latte,Coffee,135,"Roasted green tea latte, low caffeine",https://i.postimg.cc/vmSbzLJ1/HL.png,"hojicha,tea,latte",4.4,35,Kaohsiung,09:00-21:00
+117,Lemon Meringue Tart,Tart,165,"Tangy lemon curd, torched meringue",https://i.postimg.cc/Qt9snKsX/LMT.png,"lemon,tart,meringue",4.6,13,Taipei,11:00-20:30
+118,Hazelnut Praline Cake,Cake,230,"Crunchy praline base, gianduja cream",https://i.postimg.cc/CK6SNH3b/HPC.png,"hazelnut,praline,gianduja",4.7,7,New Taipei,12:00-20:00
+119,Iced Americano,Coffee,90,Bright and clean long black on ice,https://i.postimg.cc/26bmXLmR/IA.png,"americano,iced",4.1,80,Taipei,08:00-22:00
+120,Raspberry Rose Macarons (Box of 8),Macaron,240,"Rose-infused raspberry ganache, box of eight",https://i.postimg.cc/3R47b07J/RRM.png,"macaron,rose,raspberry",4.5,18,Taoyuan,11:00-20:00
+121,Crème Brûlée,Dessert,160,"Caramelized top, vanilla custard base",https://i.postimg.cc/CK0q0Ydh/21.png,"custard,caramel",4.6,15,Taichung,12:00-21:00
+122,Ethiopian Pour-Over,Coffee,150,"Floral and citrus notes, hand-brewed",https://i.postimg.cc/25YZYm3f/22.png,"pour-over,floral",4.4,25,Taipei,09:00-21:00
+123,Mango Shortcake,Cake,210,"Whipped cream, seasonal mango cubes",https://i.postimg.cc/FKvLvm1N/23.png,"mango,seasonal,shortcake",4.5,11,Kaohsiung,11:00-20:30
+124,Pain au Chocolat,Pastry,105,Crispy layers with dark chocolate baton,https://i.postimg.cc/DzhXhFm2/24.png,"chocolate,laminated",4.6,24,Tainan,08:00-18:30
+
