@@ -97,4 +97,4 @@ jspm_packages/
 .tern-port
 
 # Chat history (optional - remove this line if you want to include chat history)
-chat-history/
+# chat-history/

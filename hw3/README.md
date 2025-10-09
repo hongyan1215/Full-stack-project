@@ -116,6 +116,7 @@
 # 1. 複製專案
 git clone <repository-url>
 cd hw3
+若是以下載方式獲得專案檔則cd到專案檔位置
 
 # 2. 安裝相依套件
 npm install
