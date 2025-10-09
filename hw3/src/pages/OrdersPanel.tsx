@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { RequestChangeDialog } from "@/components/RequestChangeDialog";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Clock, Package, MessageSquare } from "lucide-react";
+import { Clock, Package, MessageSquare, ArrowLeft, Plus } from "lucide-react";
 
 export default function OrdersPanel() {
   const { orders, markChangeRequested } = useOrders();
@@ -25,7 +25,16 @@ export default function OrdersPanel() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      <h1 className="font-display text-3xl mb-6">Orders</h1>
+      {/* Header with back button and title */}
+      <div className="flex items-center gap-4 mb-6">
+        <Button asChild variant="ghost" className="bg-[color:var(--glass)]/60 hover:bg-[color:var(--glass)] border border-white/8 rounded-2xl">
+          <Link to="/" className="flex items-center gap-2">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Browse
+          </Link>
+        </Button>
+        <h1 className="font-display text-3xl">Orders</h1>
+      </div>
       
       {orders.length === 0 ? (
         <div className="text-center py-16">
@@ -37,8 +46,19 @@ export default function OrdersPanel() {
           </Button>
         </div>
       ) : (
-        <div className="space-y-6">
-          {sortedOrders.map((order) => (
+        <div>
+          {/* Continue shopping button */}
+          <div className="mb-6 flex justify-center">
+            <Button asChild className="bg-[color:var(--rose)] text-black hover:brightness-110 rounded-2xl px-6 py-3">
+              <Link to="/" className="flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                Continue Adding Items
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="space-y-6">
+            {sortedOrders.map((order) => (
             <div key={order.id} className="glass p-6 rounded-2xl">
               {/* Header with status and date */}
               <div className="flex items-center justify-between mb-4">
@@ -127,7 +147,8 @@ export default function OrdersPanel() {
                 </div>
               </div>
             </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
