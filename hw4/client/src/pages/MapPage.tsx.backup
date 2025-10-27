@@ -1,0 +1,493 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { importLibrary } from '@googlemaps/js-api-loader';
+import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
+import { calculateDistance } from '../utils/haversine';
+import Header from '../components/Header';
+
+const motivationalQuotes = [
+  '💪 每段路線都是獨特的冒險',
+  '🌟 一步一腳印，成就非凡旅程',
+  '🏃 奔跑吧！追逐心中的夢想',
+  '⭐ 堅持下去，你比想像中更強',
+  '🎯 今天的汗水，明天的驕傲',
+  '🔥 挑戰自己，突破極限',
+];
+
+export default function MapPage() {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
+  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
+  const [points, setPoints] = useState<google.maps.LatLng[]>([]);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [tipsExpanded, setTipsExpanded] = useState(true);
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  // Rotate motivational quotes every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentQuoteIndex((prev) => (prev + 1) % motivationalQuotes.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const addPoint = useCallback((latLng: google.maps.LatLng) => {
+    if (!map) return;
+    
+    setPoints(prevPoints => {
+      const newPoints = [...prevPoints, latLng];
+      const pointIndex = newPoints.length;
+      
+      // 創建標記
+      const marker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        label: {
+          text: pointIndex.toString(),
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '12px'
+        },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: pointIndex === 1 ? '#10b981' : (pointIndex === newPoints.length ? '#ef4444' : '#3b82f6'),
+          fillOpacity: 1,
+          strokeColor: 'white',
+          strokeWeight: 2
+        }
+      });
+      
+      setMarkers(prevMarkers => [...prevMarkers, marker]);
+
+      // 更新 polyline
+      setPolyline(prevPolyline => {
+        if (prevPolyline) {
+          prevPolyline.setPath(newPoints);
+          return prevPolyline;
+        } else {
+          const newPolyline = new google.maps.Polyline({
+            path: newPoints,
+            strokeColor: '#3b82f6',
+            strokeWeight: 4,
+            map
+          });
+          return newPolyline;
+        }
+      });
+      
+      return newPoints;
+    });
+  }, [map]);
+
+  // 初始化地圖
+  useEffect(() => {
+    const initMap = async () => {
+      try {
+        const { Map } = await importLibrary('maps');
+
+        if (mapRef.current) {
+          const mapInstance = new Map(mapRef.current, {
+            center: { lat: 25.0330, lng: 121.5654 },
+            zoom: 13
+          });
+
+          setMap(mapInstance);
+        } else {
+          console.error('Map container ref is null');
+        }
+      } catch (error) {
+        console.error('Error initializing map:', error);
+      }
+    };
+
+    initMap();
+  }, []);
+
+  // 當地圖初始化後添加點擊事件
+  useEffect(() => {
+    if (!map) return;
+
+    const clickListener = map.addListener('click', (e: google.maps.MapMouseEvent) => {
+      if (e.latLng) {
+        addPoint(e.latLng);
+      }
+    });
+
+    return () => {
+      google.maps.event.removeListener(clickListener);
+    };
+  }, [map, addPoint]);
+
+  const clearPoints = () => {
+    // 清除所有標記
+    markers.forEach(marker => marker.setMap(null));
+    setMarkers([]);
+    setPoints([]);
+    if (polyline) {
+      polyline.setMap(null);
+      setPolyline(null);
+    }
+  };
+
+  const undoLastPoint = () => {
+    if (points.length === 0) return;
+    
+    // 移除最後一個標記
+    const lastMarker = markers[markers.length - 1];
+    if (lastMarker) {
+      lastMarker.setMap(null);
+      setMarkers(markers.slice(0, -1));
+    }
+    
+    const newPoints = points.slice(0, -1);
+    setPoints(newPoints);
+    
+    // 更新 polyline
+    if (polyline) {
+      if (newPoints.length > 0) {
+        polyline.setPath(newPoints);
+      } else {
+        polyline.setMap(null);
+        setPolyline(null);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (points.length < 2) {
+      alert('至少需要 2 個點');
+      return;
+    }
+    if (!title.trim()) {
+      alert('請輸入路線名稱');
+      return;
+    }
+
+    setIsSubmitting(true);
+    const coordinates = points.map(p => [p.lng(), p.lat()]);
+    const distance = calculateDistance(points);
+
+    try {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/routes`, {
+        title: title.trim(),
+        description: description.trim() || undefined,
+        distanceMeters: distance,
+        geojson: {
+          type: 'LineString',
+          coordinates
+        }
+      });
+      alert('路線建立成功！');
+      navigate('/routes');
+    } catch (error) {
+      console.error('建立路線失敗:', error);
+      alert('建立路線失敗，請稍後再試');
+      setIsSubmitting(false);
+    }
+  };
+
+  const distance = calculateDistance(points);
+
+  return (
+    <div className="h-screen flex flex-col overflow-hidden">
+      <Header />
+      <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 relative">
+          {/* Empty State Overlay */}
+          {points.length === 0 && (
+            <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+              <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 max-w-md mx-4 border-4 border-blue-500 animate-pulse">
+                <div className="text-center">
+                  <div className="text-7xl mb-4 animate-bounce">👆</div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">開始規劃路線！</h3>
+                  <p className="text-gray-600 mb-4">在地圖上點擊任意位置新增第一個節點</p>
+                  <div className="flex items-center justify-center gap-2 text-sm text-blue-600 font-semibold">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
+                    <span>點擊地圖開始</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div
+            className="w-full h-full"
+            ref={mapRef}
+            style={{ minHeight: '100%', minWidth: '300px' }}
+          ></div>
+        </div>
+        <div className="w-80 bg-white border-l border-gray-200 shadow-lg overflow-y-auto flex flex-col">
+          {/* Gradient Header with Decorative Elements */}
+          <div className="relative bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-400 p-6 text-white overflow-hidden">
+            {/* Decorative blob shapes */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-10 rounded-full blur-xl -ml-12 -mb-12"></div>
+
+            {/* Dot pattern overlay */}
+            <div className="absolute inset-0 bg-dots-pattern opacity-30"></div>
+
+            {/* Content */}
+            <div className="relative z-10 text-center">
+              <div className="text-6xl mb-3 animate-bounce">🗺️</div>
+              <h2 className="text-2xl font-bold mb-1">建立新路線</h2>
+              <p className="text-sm text-blue-100">點擊地圖開始規劃您的跑步路線</p>
+            </div>
+          </div>
+
+          {/* Wave separator */}
+          <div className="h-4 bg-gradient-to-b from-teal-400 to-white"></div>
+
+          <div className="flex-1 p-4">{/* Main content container */}
+
+        {/* Enhanced Stats Card with Progress and Achievements */}
+        <div className="mb-4 p-5 bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 rounded-2xl border-2 border-orange-100 shadow-md">
+          <div className="space-y-4">
+            {/* Nodes Count */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-gray-700 font-semibold flex items-center gap-1">
+                  <span className="text-lg">📍</span> 節點數
+                </span>
+                <span className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 gradient-text">
+                  {points.length}
+                </span>
+              </div>
+              {/* Progress bar for nodes */}
+              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-orange-500 to-pink-500 transition-all duration-500"
+                  style={{ width: `${Math.min((points.length / 10) * 100, 100)}%` }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                {points.length < 2 ? '至少需要 2 個節點' : points.length >= 10 ? '精細路線！' : `距離精細記錄還差 ${10 - points.length} 個節點`}
+              </p>
+            </div>
+
+            {/* Distance */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-gray-700 font-semibold flex items-center gap-1">
+                  <span className="text-lg">📏</span> 距離
+                </span>
+                <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 gradient-text">
+                  {(distance / 1000).toFixed(2)} km
+                </span>
+              </div>
+              {/* Progress bar for distance */}
+              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-500"
+                  style={{ width: `${Math.min((distance / 10000) * 100, 100)}%` }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                {distance >= 10000 ? '超長距離挑戰！' : distance >= 5000 ? '已達 5 公里！' : distance >= 1000 ? '已達 1 公里！' : '繼續加油'}
+              </p>
+            </div>
+
+            {/* Achievement Badges */}
+            {(points.length >= 2 || distance >= 1000) && (
+              <div className="pt-3 border-t border-orange-200">
+                <p className="text-xs text-gray-600 font-semibold mb-2">🏆 即時成就</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {points.length >= 2 && (
+                    <span className="badge-achievement bg-green-500 text-xs px-2 py-1">
+                      ✓ 可建立路線
+                    </span>
+                  )}
+                  {points.length >= 5 && (
+                    <span className="badge-achievement bg-blue-500 text-xs px-2 py-1">
+                      ⭐ 5個節點
+                    </span>
+                  )}
+                  {points.length >= 10 && (
+                    <span className="badge-achievement bg-purple-500 text-xs px-2 py-1">
+                      🌟 精細記錄
+                    </span>
+                  )}
+                  {distance >= 1000 && (
+                    <span className="badge-achievement bg-cyan-500 text-xs px-2 py-1">
+                      🏃 1公里
+                    </span>
+                  )}
+                  {distance >= 5000 && (
+                    <span className="badge-achievement bg-orange-500 text-xs px-2 py-1">
+                      🎖️ 5公里
+                    </span>
+                  )}
+                  {distance >= 10000 && (
+                    <span className="badge-achievement bg-pink-500 text-xs px-2 py-1">
+                      🏆 10公里
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Estimated Time */}
+            {distance > 0 && (
+              <div className="pt-3 border-t border-pink-200">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-600 flex items-center gap-1">
+                    <span>⏱️</span> 預估時間
+                  </span>
+                  <span className="text-sm font-bold text-gray-700">
+                    約 {Math.ceil((distance / 1000) * 6)} 分鐘
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">以 10 分/公里配速計算</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+            {/* Form Inputs */}
+        <div className="space-y-3 mb-4">
+          <div className="relative">
+            <span className="absolute left-3 top-3.5 text-gray-400">✏️</span>
+            <input
+              type="text"
+              placeholder="路線名稱 *"
+              className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="relative">
+            <span className="absolute left-3 top-3 text-gray-400">📝</span>
+            <textarea
+              placeholder="描述（選填）"
+              className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all resize-none"
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Primary Action Button */}
+        <button
+          onClick={handleSubmit}
+          disabled={points.length < 2 || !title || isSubmitting}
+          className="w-full bg-gradient-to-r from-orange-500 via-pink-500 to-rose-500 text-white py-4 px-6 rounded-xl font-bold text-lg disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed mb-4 flex items-center justify-center gap-2 shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:shadow-none disabled:hover:scale-100"
+        >
+          {isSubmitting ? (
+            <>
+              <svg className="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              儲存中...
+            </>
+          ) : (
+            <>
+              <span className="text-xl">💾</span>
+              儲存路線
+            </>
+          )}
+        </button>
+
+        {/* Secondary Action Buttons */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <button
+            onClick={undoLastPoint}
+            disabled={points.length === 0}
+            className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 disabled:hover:scale-100"
+          >
+            <span className="text-lg">↩️</span>
+            <span>撤銷</span>
+          </button>
+          <button
+            onClick={clearPoints}
+            disabled={points.length === 0}
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white py-3 px-4 rounded-xl font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 disabled:hover:scale-100"
+          >
+            <span className="text-lg">🗑️</span>
+            <span>清除</span>
+          </button>
+        </div>
+
+        {/* Tertiary Navigation Button */}
+        <button
+          onClick={() => navigate('/routes')}
+          className="w-full bg-white border-2 border-gray-300 hover:border-blue-500 text-gray-700 hover:text-blue-600 py-3 px-4 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+        >
+          <span className="text-lg">📋</span>
+          <span>查看路線列表</span>
+        </button>
+
+        {/* Rotating Motivational Quote */}
+        <div className="mt-4 p-4 bg-gradient-to-r from-purple-100 via-pink-100 to-rose-100 rounded-xl border-2 border-purple-200 shadow-sm">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-gray-700 font-medium italic transition-all duration-500">
+              {motivationalQuotes[currentQuoteIndex]}
+            </p>
+            <div className="flex gap-1">
+              {motivationalQuotes.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${
+                    index === currentQuoteIndex ? 'bg-purple-600 w-4' : 'bg-purple-300'
+                  }`}
+                ></div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Collapsible Tips Section */}
+        <div className="mt-4">
+          <button
+            onClick={() => setTipsExpanded(!tipsExpanded)}
+            className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-t-xl border border-blue-200 hover:from-blue-100 hover:to-cyan-100 transition-all"
+          >
+            <span className="text-sm font-bold text-gray-700 flex items-center gap-2">
+              <span className="text-lg">💡</span>
+              使用小幫手
+            </span>
+            <span className={`text-gray-600 transition-transform duration-300 ${tipsExpanded ? 'rotate-180' : ''}`}>
+              ▼
+            </span>
+          </button>
+          {tipsExpanded && (
+            <div className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-b-xl border-x border-b border-blue-200 animate-slide-in">
+              <ul className="text-sm text-gray-700 space-y-2">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500 font-bold">📍</span>
+                  <span>在地圖上點擊就能新增節點</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-500 font-bold">✅</span>
+                  <span>至少需要 2 個節點才能建立路線</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500 font-bold">↩️</span>
+                  <span>點錯了？使用「撤銷」回到上一步</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 font-bold">🗑️</span>
+                  <span>想重來？使用「清除」移除所有節點</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-purple-500 font-bold">🎯</span>
+                  <span>節點越多，路線越精確！</span>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        </div>{/* End of main content container */}
+      </div>{/* End of sidebar */}
+    </div>{/* End of flex container */}
+    </div>{/* End of screen container */}
+  );
+}
