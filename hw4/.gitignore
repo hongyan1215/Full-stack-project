@@ -32,5 +32,4 @@ Thumbs.db
 *.swo
 
 # Chat history (keep directory but ignore contents)
-chat-history/*.md
 chat-history/*.txt
