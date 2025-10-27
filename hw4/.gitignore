@@ -16,6 +16,8 @@ build/
 *.db
 *.sqlite
 *.sqlite3
+# But allow server/db/data.db for initial setup
+!server/db/data.db
 
 # Logs
 logs/
