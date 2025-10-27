@@ -244,7 +244,6 @@ export default function MapPage() {
 
             {/* Content */}
             <div className="relative z-10 text-center">
-              <div className="text-6xl mb-3 animate-bounce">🗺️</div>
               <h2 className="text-2xl font-bold mb-1">建立新路線</h2>
               <p className="text-sm text-blue-100">點擊地圖開始規劃您的跑步路線</p>
             </div>

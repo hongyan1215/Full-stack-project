@@ -4,19 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design System Variables */
+/* Design System Variables - Dark Theme */
 :root {
-  /* Colors */
-  --color-primary: #4285F4;
-  --color-success: #34A853;
-  --color-warning: #FBBC04;
-  --color-danger: #EA4335;
-  --color-bg: #F9FAFB;
-  --color-surface: #FFFFFF;
-  --color-border: #E0E0E0;
-  --color-text-primary: #202124;
-  --color-text-secondary: #5F6368;
-  --color-text-tertiary: #9AA0A6;
+  /* Dark Theme Colors */
+  --color-dark-bg: #1a1a1a;
+  --color-dark-surface: #2a2a2a;
+  --color-dark-elevated: #333333;
+  --color-dark-border: #404040;
+  
+  /* Primary - Teal/Cyan */
+  --color-primary: #4fd1c5;
+  --color-primary-dark: #38b2ac;
+  --color-primary-light: #81e6d9;
+  
+  /* Text Colors */
+  --color-text-primary: #f7fafc;
+  --color-text-secondary: #cbd5e0;
+  --color-text-tertiary: #a0aec0;
+  --color-text-disabled: #718096;
+  
+  /* Status Colors */
+  --color-success: #48bb78;
+  --color-warning: #ed8936;
+  --color-danger: #f56565;
+  --color-info: #4299e1;
   
   /* Spacing */
   --radius-sm: 8px;
@@ -24,36 +35,42 @@
   --radius-lg: 16px;
   --radius-xl: 24px;
   
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.12);
-  --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.15);
+  /* Shadows - Dark theme */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.7);
+  
+  /* Glass effect */
+  --bg-glass: rgba(42, 42, 42, 0.8);
+  --bg-glass-light: rgba(42, 42, 42, 0.6);
 }
 
 body {
   font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--color-text-primary);
+  background: var(--color-dark-bg);
 }
 
-/* Unified Card Style */
-.card {
-  background: var(--color-surface);
+/* Glass Card Style */
+.card-glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-dark-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  padding: 24px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.card:hover {
+.card-glass:hover {
   box-shadow: var(--shadow-hover);
   transform: translateY(-2px);
 }
 
-/* Unified Button Styles */
-.btn-primary {
-  background: linear-gradient(90deg, #4285F4, #34A853);
-  color: white;
+/* Dark Button Styles */
+.btn-primary-dark {
+  background: var(--color-primary);
+  color: var(--color-dark-bg);
   border: none;
   border-radius: var(--radius-sm);
   padding: 10px 20px;
@@ -62,15 +79,16 @@ body {
   cursor: pointer;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary-dark:hover:not(:disabled) {
+  background: var(--color-primary-light);
   transform: scale(1.03);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
 }
 
-.btn-secondary {
-  background: var(--color-surface);
+.btn-secondary-dark {
+  background: var(--color-dark-surface);
   color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-dark-border);
   border-radius: var(--radius-sm);
   padding: 10px 20px;
   font-weight: 600;
@@ -78,25 +96,9 @@ body {
   cursor: pointer;
 }
 
-.btn-secondary:hover:not(:disabled) {
-  background: var(--color-bg);
+.btn-secondary-dark:hover:not(:disabled) {
+  background: var(--color-dark-elevated);
   border-color: var(--color-primary);
-}
-
-.btn-danger {
-  background: var(--color-danger);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 10px 20px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.btn-danger:hover:not(:disabled) {
-  background: #d93025;
-  transform: scale(1.03);
 }
 
 @keyframes slide-in {
@@ -403,26 +405,26 @@ input:focus, textarea:focus, select:focus {
   }
 }
 
-/* Background Container */
+/* Background Container - Dark Theme */
 .animated-bg {
   position: relative;
-  background: white;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   overflow: hidden;
 }
 
-/* Blob Shapes */
+/* Blob Shapes - Dark Theme with Teal/Cyan */
 .bg-blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.3;
+  opacity: 0.15;
   z-index: 0;
 }
 
 .bg-blob-1 {
   width: 400px;
   height: 400px;
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
   top: -200px;
   right: -100px;
   animation: float-blob 20s ease-in-out infinite;
@@ -431,7 +433,7 @@ input:focus, textarea:focus, select:focus {
 .bg-blob-2 {
   width: 300px;
   height: 300px;
-  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  background: linear-gradient(135deg, #81e6d9 0%, #4fd1c5 100%);
   bottom: -150px;
   left: -100px;
   animation: float-blob-reverse 25s ease-in-out infinite;
@@ -440,14 +442,14 @@ input:focus, textarea:focus, select:focus {
 .bg-blob-3 {
   width: 350px;
   height: 350px;
-  background: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+  background: linear-gradient(135deg, #38b2ac 0%, #2c9aa4 100%);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   animation: float-blob 30s ease-in-out infinite;
 }
 
-/* Particles */
+/* Particles - Dark Theme */
 .bg-particles {
   position: absolute;
   top: 0;
@@ -462,7 +464,7 @@ input:focus, textarea:focus, select:focus {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(59, 130, 246, 0.4);
+  background: rgba(79, 209, 197, 0.3);
   border-radius: 50%;
   animation: particle-float linear infinite;
   will-change: transform, opacity;

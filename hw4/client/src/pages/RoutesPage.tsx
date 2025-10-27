@@ -88,7 +88,7 @@ export default function RoutesPage() {
           </div>
           <button
             onClick={() => navigate('/map')}
-            className="h-11 px-6 bg-blue-500 text-white rounded-2xl font-medium text-base hover:bg-blue-600 transition-colors"
+            className="h-12 px-8 bg-blue-500 text-white rounded-2xl font-semibold text-lg hover:bg-blue-600 transition-all hover:scale-[1.02] shadow-lg"
           >
             + 新增路線
           </button>
@@ -127,51 +127,58 @@ export default function RoutesPage() {
             </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-5">
             {filteredRoutes.map((route) => (
-              <div key={route.id} className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    {/* Top Row: Title + Distance */}
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-bold text-gray-900">{route.title}</h3>
-                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold">
-                        📏 {(route.distanceMeters / 1000).toFixed(2)} km
-                      </span>
-                    </div>
-                    
-                    {/* Bottom Row: Location + Date */}
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                      {route.startAddress && (
-                        <span className="flex items-center gap-1">
-                          📍 {route.startAddress}
-                        </span>
+              <div key={route.id} className="bg-white rounded-2xl shadow-md p-7 hover:shadow-xl transition-all border border-gray-100">
+                <div className="flex items-start justify-between gap-6">
+                  <div className="flex-1 min-w-0">
+                    {/* Title Row */}
+                    <div className="mb-4">
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">{route.title}</h3>
+                      {route.description && (
+                        <p className="text-base text-gray-600 line-clamp-2">{route.description}</p>
                       )}
-                      <span className="flex items-center gap-1">
-                        📅 {new Date(route.createdAt).toLocaleDateString('zh-TW')}
-                      </span>
                     </div>
                     
-                    {route.description && (
-                      <p className="text-sm text-gray-500 mt-2 line-clamp-1">{route.description}</p>
-                    )}
+                    {/* Info Row */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold">
+                          📏 {(route.distanceMeters / 1000).toFixed(2)} km
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg text-sm">
+                          📅 {new Date(route.createdAt).toLocaleDateString('zh-TW')}
+                        </span>
+                      </div>
+                      
+                      {route.startAddress && (
+                        <div className="flex items-start gap-2 text-sm text-gray-600">
+                          <span className="mt-0.5">📍</span>
+                          <span className="line-clamp-1">{route.startAddress}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   
                   {/* Action Buttons */}
-                  <div className="flex gap-2 ml-4">
+                  <div className="flex flex-col gap-2 shrink-0">
                     <button
                       onClick={() => navigate(`/routes/${route.id}`)}
-                      className="p-2 hover:bg-blue-50 rounded-lg transition-colors group"
-                      title="查看詳情"
+                      className="px-5 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-all font-medium text-base group border border-blue-200 hover:shadow-md whitespace-nowrap"
                     >
-                      <span className="text-xl group-hover:scale-110 inline-block transition-transform">🔍</span>
+                      <span className="flex items-center gap-2">
+                        <span>🔍</span>
+                        <span>查看</span>
+                      </span>
                     </button>
                     <button
                       onClick={() => deleteRoute(route.id)}
-                      className="p-2 hover:bg-red-50 rounded-lg transition-colors group"
-                      title="刪除路線"
+                      className="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl transition-all font-medium text-base group border border-red-200 hover:shadow-md whitespace-nowrap"
                     >
-                      <span className="text-xl group-hover:scale-110 inline-block transition-transform">🗑️</span>
+                      <span className="flex items-center gap-2">
+                        <span>🗑️</span>
+                        <span>刪除</span>
+                      </span>
                     </button>
                   </div>
                 </div>

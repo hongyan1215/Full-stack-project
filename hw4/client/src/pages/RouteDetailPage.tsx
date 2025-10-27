@@ -171,11 +171,11 @@ export default function RouteDetailPage() {
         <Header />
         <div className="container mx-auto p-4">
         {/* Hero Section */}
-        <div className="bg-white rounded-2xl p-8 mb-6 shadow-md">
+        <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl p-8 mb-6 border border-gray-700 shadow-xl">
           <div className="flex justify-between items-start mb-4">
             <button
               onClick={() => navigate('/routes')}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors font-medium text-gray-700"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg transition-colors font-medium text-gray-300 border border-gray-600"
             >
               <span>←</span>
               返回列表
@@ -183,23 +183,23 @@ export default function RouteDetailPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => navigate(`/routes/${id}/edit`)}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-lg hover:scale-[1.03] transition-transform font-semibold shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-teal-500 hover:bg-teal-400 text-gray-900 rounded-lg hover:scale-[1.02] transition-all font-semibold shadow-lg hover:shadow-teal-500/50"
               >
                 <span>✏️</span>
                 編輯
               </button>
               <button
                 onClick={handleDelete}
-                className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:scale-[1.03] transition-transform font-semibold shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg hover:scale-[1.02] transition-all font-semibold shadow-lg"
               >
                 <span>🗑️</span>
                 刪除
               </button>
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">{route.title}</h1>
+          <h1 className="text-3xl font-bold text-white mb-3">{route.title}</h1>
           {route.description && (
-            <p className="text-gray-700 text-lg mb-4">{route.description}</p>
+            <p className="text-gray-400 text-lg mb-4">{route.description}</p>
           )}
           {/* Achievement badges */}
           <div className="flex flex-wrap gap-2">
@@ -217,74 +217,66 @@ export default function RouteDetailPage() {
 
         {/* Enhanced Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="stat-card pulse-stat">
-            <div className="stat-card-icon bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
-              📏
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800">{(route.distanceMeters / 1000).toFixed(2)} km</h3>
-            <p className="text-sm text-gray-600">距離</p>
+          <div className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-4 border border-gray-700">
+            <div className="text-3xl mb-2">📏</div>
+            <h3 className="text-2xl font-bold text-teal-400">{(route.distanceMeters / 1000).toFixed(2)} km</h3>
+            <p className="text-sm text-gray-400">距離</p>
           </div>
-          <div className="stat-card pulse-stat">
-            <div className="stat-card-icon bg-gradient-to-r from-green-500 to-emerald-500 text-white">
-              📍
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800">{route.geojson?.coordinates?.length || 0}</h3>
-            <p className="text-sm text-gray-600">節點數</p>
+          <div className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-4 border border-gray-700">
+            <div className="text-3xl mb-2">📍</div>
+            <h3 className="text-2xl font-bold text-teal-400">{route.geojson?.coordinates?.length || 0}</h3>
+            <p className="text-sm text-gray-400">節點數</p>
           </div>
-          <div className="stat-card pulse-stat">
-            <div className="stat-card-icon bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-              📅
-            </div>
-            <h3 className="text-lg font-bold text-gray-800">{new Date(route.createdAt).toLocaleDateString('zh-TW')}</h3>
-            <p className="text-sm text-gray-600">建立時間</p>
+          <div className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-4 border border-gray-700">
+            <div className="text-3xl mb-2">📅</div>
+            <h3 className="text-lg font-bold text-teal-400">{new Date(route.createdAt).toLocaleDateString('zh-TW')}</h3>
+            <p className="text-sm text-gray-400">建立時間</p>
           </div>
           {route.startAddress && (
-            <div className="stat-card pulse-stat">
-              <div className="stat-card-icon bg-gradient-to-r from-orange-500 to-red-500 text-white">
-                🏁
-              </div>
-              <h3 className="text-sm font-bold text-gray-800 line-clamp-2">{route.startAddress}</h3>
-              <p className="text-sm text-gray-600">起點</p>
+            <div className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-4 border border-gray-700">
+              <div className="text-3xl mb-2">🏁</div>
+              <h3 className="text-sm font-bold text-teal-400 line-clamp-2">{route.startAddress}</h3>
+              <p className="text-sm text-gray-400">起點</p>
             </div>
           )}
         </div>
 
         {/* Map with enhanced styling */}
-        <div className="bg-white rounded-2xl shadow-md overflow-hidden border-4 border-gray-100 relative">
+        <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-700 shadow-xl">
           <div className="h-96 w-full" ref={mapRef}></div>
         </div>
 
         {/* Additional Info Cards */}
         <div className="grid gap-4 md:grid-cols-3 mt-6">
           {/* Weather Info (decorative) */}
-          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-200">
+          <div className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-4 border border-gray-700">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-3xl">☀️</span>
               <div>
-                <p className="text-sm text-gray-600">天氣</p>
-                <p className="font-bold text-gray-800">適合跑步</p>
+                <p className="text-sm text-gray-400">天氣</p>
+                <p className="font-bold text-white">適合跑步</p>
               </div>
             </div>
           </div>
 
           {/* Elevation Info (mock) */}
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+          <div className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-4 border border-gray-700">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-3xl">⛰️</span>
               <div>
-                <p className="text-sm text-gray-600">海拔變化</p>
-                <p className="font-bold text-gray-800">約 {Math.floor(route.distanceMeters / 10)} m</p>
+                <p className="text-sm text-gray-400">海拔變化</p>
+                <p className="font-bold text-white">約 {Math.floor(route.distanceMeters / 10)} m</p>
               </div>
             </div>
           </div>
 
           {/* Estimated Time */}
-          <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-4 border border-orange-200">
+          <div className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-4 border border-gray-700">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-3xl">⏱️</span>
               <div>
-                <p className="text-sm text-gray-600">預估時間</p>
-                <p className="font-bold text-gray-800">約 {Math.ceil(route.distanceMeters / 1000 * 6)} 分</p>
+                <p className="text-sm text-gray-400">預估時間</p>
+                <p className="font-bold text-white">約 {Math.ceil(route.distanceMeters / 1000 * 6)} 分</p>
               </div>
             </div>
           </div>
