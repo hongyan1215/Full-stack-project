@@ -1,8 +1,9 @@
 {
   "version": 2,
-  "regions": ["sfo1"],
-  "buildCommand": "yarn prisma:generate && yarn build",
+  "buildCommand": "cd apps/web && yarn prisma:generate && cd ../.. && yarn build",
   "installCommand": "yarn install",
+  "outputDirectory": "apps/web/.next",
+  "regions": ["sfo1"],
   "build": {
     "env": {
       "NEXT_PUBLIC_VERCEL_REGION": "sfo1"
