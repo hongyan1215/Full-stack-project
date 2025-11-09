@@ -29,21 +29,34 @@ export function PostActions({
   const [likes, setLikes] = useState(likeCount);
   const [reposted, setReposted] = useState(isReposted);
   const [reposts, setReposts] = useState(repostCount);
+  const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
 
   // Sync states when props change (for real-time updates from Pusher)
-  // But keep the optimistic update logic in the handlers
+  // Skip if we're currently updating to avoid conflicts
   useEffect(() => {
-    setLiked(isLiked);
-  }, [isLiked]);
+    if (!isUpdating) {
+      setLiked(isLiked);
+    }
+  }, [isLiked, isUpdating]);
 
   useEffect(() => {
-    setReposted(isReposted);
-  }, [isReposted]);
+    if (!isUpdating) {
+      setLikes(likeCount);
+    }
+  }, [likeCount, isUpdating]);
 
   useEffect(() => {
-    setReposts(repostCount);
-  }, [repostCount]);
+    if (!isUpdating) {
+      setReposted(isReposted);
+    }
+  }, [isReposted, isUpdating]);
+
+  useEffect(() => {
+    if (!isUpdating) {
+      setReposts(repostCount);
+    }
+  }, [repostCount, isUpdating]);
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -51,6 +64,14 @@ export function PostActions({
       router.push("/api/auth/signin");
       return;
     }
+
+    // Optimistic update
+    const previousLiked = liked;
+    const previousLikes = likes;
+
+    setIsUpdating(true);
+    setLiked(!liked);
+    setLikes(liked ? Math.max(0, likes - 1) : likes + 1);
 
     try {
       const res = await fetch("/api/likes", {
@@ -60,19 +81,25 @@ export function PostActions({
       });
 
       if (!res.ok) {
+        // Revert on error
+        setLiked(previousLiked);
+        setLikes(previousLikes);
+
         if (res.status === 401) {
-          // Session expired, redirect to sign in
           router.push("/api/auth/signin");
           return;
         }
         throw new Error("Failed to toggle like");
       }
 
-      // Don't update local state here - let Pusher handle it
-      // This prevents double counting when Pusher broadcasts the update
+      // Allow Pusher updates after a short delay
+      setTimeout(() => setIsUpdating(false), 1000);
     } catch (error) {
       console.error("Error toggling like:", error);
-      // Don't redirect on network errors, just log them
+      // Revert on error
+      setLiked(previousLiked);
+      setLikes(previousLikes);
+      setIsUpdating(false);
     }
   };
 
@@ -83,14 +110,26 @@ export function PostActions({
       return;
     }
 
+    // Optimistic update
+    const previousReposted = reposted;
+    const previousReposts = reposts;
+
+    setIsUpdating(true);
+    setReposted(!reposted);
+    setReposts(reposted ? Math.max(0, reposts - 1) : reposts + 1);
+
     try {
-      if (reposted) {
+      if (previousReposted) {
         // Unrepost
         const res = await fetch(`/api/reposts/${postId}`, {
           method: "DELETE",
         });
 
         if (!res.ok) {
+          // Revert on error
+          setReposted(previousReposted);
+          setReposts(previousReposts);
+
           if (res.status === 401) {
             router.push("/api/auth/signin");
             return;
@@ -106,6 +145,10 @@ export function PostActions({
         });
 
         if (!res.ok) {
+          // Revert on error
+          setReposted(previousReposted);
+          setReposts(previousReposts);
+
           if (res.status === 401) {
             router.push("/api/auth/signin");
             return;
@@ -114,11 +157,14 @@ export function PostActions({
         }
       }
 
-      // Don't update local state here - let Pusher handle it
-      // This prevents double counting when Pusher broadcasts the update
+      // Allow Pusher updates after a short delay
+      setTimeout(() => setIsUpdating(false), 1000);
     } catch (error) {
       console.error("Error toggling repost:", error);
-      // Don't redirect on network errors, just log them
+      // Revert on error
+      setReposted(previousReposted);
+      setReposts(previousReposts);
+      setIsUpdating(false);
     }
   };
 
