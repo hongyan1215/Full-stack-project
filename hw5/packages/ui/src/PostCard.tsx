@@ -145,14 +145,34 @@ export function PostCard({ post, currentUserId, onReply, onClick }: PostCardProp
       <div className="flex gap-3">
         {/* Avatar */}
         <div className="flex-shrink-0">
-          {post.author.image ? (
-            <img
-              src={post.author.image}
-              alt={post.author.name || "User"}
-              className="h-10 w-10 rounded-full"
-            />
+          {post.author.userId ? (
+            <Link
+              href={`/${post.author.userId}`}
+              onClick={(e) => e.stopPropagation()}
+              className="block"
+            >
+              {post.author.image ? (
+                <img
+                  src={post.author.image}
+                  alt={post.author.name || "User"}
+                  className="h-10 w-10 rounded-full hover:opacity-90 transition-opacity"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full bg-x-border hover:opacity-90 transition-opacity" />
+              )}
+            </Link>
           ) : (
-            <div className="h-10 w-10 rounded-full bg-x-border" />
+            <>
+              {post.author.image ? (
+                <img
+                  src={post.author.image}
+                  alt={post.author.name || "User"}
+                  className="h-10 w-10 rounded-full"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full bg-x-border" />
+              )}
+            </>
           )}
         </div>
 
@@ -160,9 +180,19 @@ export function PostCard({ post, currentUserId, onReply, onClick }: PostCardProp
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 justify-between">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="font-bold text-x-text">
-                {post.author.name || "Anonymous"}
-              </span>
+              {post.author.userId ? (
+                <Link
+                  href={`/${post.author.userId}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="font-bold text-x-text hover:underline"
+                >
+                  {post.author.name || "Anonymous"}
+                </Link>
+              ) : (
+                <span className="font-bold text-x-text">
+                  {post.author.name || "Anonymous"}
+                </span>
+              )}
               {post.author.userId && (
                 <Link
                   href={`/${post.author.userId}`}
