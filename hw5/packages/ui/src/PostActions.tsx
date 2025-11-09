@@ -31,10 +31,19 @@ export function PostActions({
   const [reposts, setReposts] = useState(repostCount);
   const router = useRouter();
 
-  // Update likes from prop when it changes (for real-time updates from Pusher)
+  // Sync states when props change (for real-time updates from Pusher)
+  // But keep the optimistic update logic in the handlers
   useEffect(() => {
-    setLikes(likeCount);
-  }, [likeCount]);
+    setLiked(isLiked);
+  }, [isLiked]);
+
+  useEffect(() => {
+    setReposted(isReposted);
+  }, [isReposted]);
+
+  useEffect(() => {
+    setReposts(repostCount);
+  }, [repostCount]);
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -59,14 +68,8 @@ export function PostActions({
         throw new Error("Failed to toggle like");
       }
 
-      const data = await res.json();
-      if (data.status === "added") {
-        setLiked(true);
-        setLikes((prev) => prev + 1);
-      } else {
-        setLiked(false);
-        setLikes((prev) => Math.max(0, prev - 1));
-      }
+      // Don't update local state here - let Pusher handle it
+      // This prevents double counting when Pusher broadcasts the update
     } catch (error) {
       console.error("Error toggling like:", error);
       // Don't redirect on network errors, just log them
@@ -94,9 +97,6 @@ export function PostActions({
           }
           throw new Error("Failed to unrepost");
         }
-
-        setReposted(false);
-        setReposts((prev) => Math.max(0, prev - 1));
       } else {
         // Repost
         const res = await fetch("/api/reposts", {
@@ -112,10 +112,10 @@ export function PostActions({
           }
           throw new Error("Failed to repost");
         }
-
-        setReposted(true);
-        setReposts((prev) => prev + 1);
       }
+
+      // Don't update local state here - let Pusher handle it
+      // This prevents double counting when Pusher broadcasts the update
     } catch (error) {
       console.error("Error toggling repost:", error);
       // Don't redirect on network errors, just log them
