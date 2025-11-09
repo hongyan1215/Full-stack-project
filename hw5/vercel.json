@@ -1,13 +1,6 @@
 {
-  "version": 2,
-  "buildCommand": "yarn prisma:generate && yarn build",
-  "installCommand": "yarn install --frozen-lockfile",
-  "regions": ["sfo1"],
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_VERCEL_REGION": "sfo1"
-    }
-  }
+  "buildCommand": "yarn prisma:generate && yarn build --filter=web",
+  "installCommand": "yarn install --frozen-lockfile"
 }
 
 
