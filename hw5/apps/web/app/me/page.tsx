@@ -134,22 +134,23 @@ export default async function MePage() {
   const posts = [
     ...userPosts.map((post) => ({ 
       ...post, 
-      isRepost: false,
-      repostId: undefined, // Original post, no repost ID
+      isRepost: false as const,
+      repostId: undefined,
+      repostedAt: undefined,
       isLiked: likedPostIds.has(post.id),
       isReposted: repostedPostIdsSet.has(post.id),
     })),
     ...repostsToInclude.map((repost) => ({
       ...repost.post,
-      isRepost: true,
-      repostId: repost.id, // Include repost ID for unique key
+      isRepost: true as const,
+      repostId: repost.id,
       repostedAt: repost.createdAt,
       isLiked: likedPostIds.has(repost.post.id),
       isReposted: repostedPostIdsSet.has(repost.post.id),
     })),
   ].sort((a, b) => {
-    const dateA = a.isRepost ? (a.repostedAt as Date) : a.createdAt;
-    const dateB = b.isRepost ? (b.repostedAt as Date) : b.createdAt;
+    const dateA = a.isRepost && a.repostedAt ? a.repostedAt : a.createdAt;
+    const dateB = b.isRepost && b.repostedAt ? b.repostedAt : b.createdAt;
     return dateB.getTime() - dateA.getTime();
   });
 
