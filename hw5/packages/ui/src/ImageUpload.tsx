@@ -12,6 +12,7 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
   const [imageUrl, setImageUrl] = useState(currentImage || "");
   const widgetOpenRef = useRef(false);
   const [widgetIsOpen, setWidgetIsOpen] = useState(false);
+  const uploadCountRef = useRef(0);
 
   useEffect(() => {
     setImageUrl(currentImage || "");
@@ -99,6 +100,7 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dvpm2vr2q";
     widgetOpenRef.current = true;
     setWidgetIsOpen(true);
+    uploadCountRef.current = 0; // Reset upload count
 
     const widget = cloudinary.createUploadWidget(
       {
@@ -124,20 +126,27 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
           return;
         }
 
-        // Handle success - this is the main event we care about
+        // Handle success - with cropping enabled, we get 2 success events:
+        // 1st: Original image uploaded (for cropping)
+        // 2nd: Cropped image uploaded (final result)
         if (result && result.event === "success" && result.info) {
+          uploadCountRef.current += 1;
           const newUrl = result.info.secure_url || result.info.url;
-          if (newUrl) {
-            console.log(`[${label || 'Image'}] Setting new image URL:`, newUrl);
+
+          console.log(`[${label || 'Image'}] Success event #${uploadCountRef.current}, URL:`, newUrl);
+
+          // With cropping enabled, wait for the 2nd success event (cropped image)
+          if (uploadCountRef.current >= 2 && newUrl) {
+            console.log(`[${label || 'Image'}] Setting cropped image URL:`, newUrl);
             // Use functional update to ensure we get latest state
             setImageUrl((prev) => {
               console.log(`[${label || 'Image'}] Previous image:`, prev, "New:", newUrl);
               return newUrl;
             });
             onUpload(newUrl);
+            widgetOpenRef.current = false;
+            setWidgetIsOpen(false);
           }
-          widgetOpenRef.current = false;
-          setWidgetIsOpen(false);
         }
 
         // Handle close event
