@@ -52,6 +52,10 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
         multiple: false,
         cropping: true,
         croppingAspectRatio: label === "Avatar" ? 1 : 16 / 9,
+        croppingShowDimensions: true,
+        croppingCoordinatesMode: "custom",
+        croppingValidateDimensions: true,
+        showSkipCropButton: false,
       },
       (error: any, result: any) => {
         if (error) {
@@ -60,6 +64,7 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
           return;
         }
         if (result && result.event === "success") {
+          // Use the cropped/transformed URL if available
           const url = result.info.secure_url;
           setImageUrl(url);
           onUpload(url);
