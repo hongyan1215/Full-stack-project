@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure Cloudinary widget appears above all dialogs and is always interactive */
+.cloudinary-button,
+.cloudinary-button *,
+[data-testid="upload_widget"],
+[data-testid="upload_widget"] *,
+div[class*="cloudinary"],
+iframe[src*="cloudinary"],
+div[id*="uw_widget"],
+div[id*="uw_widget"] *,
+div[class*="uw_widget"],
+div[class*="uw_widget"] * {
+  z-index: 99999 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+}
+
+/* Make sure Cloudinary widget container is above everything */
+body > div[style*="z-index"]:has(iframe[src*="cloudinary"]),
+body > div:has(iframe[src*="cloudinary"]),
+div:has(iframe[src*="cloudinary"]),
+[data-radix-portal]:has(iframe[src*="cloudinary"]) {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure Cloudinary iframe and all its children are interactive */
+iframe[src*="cloudinary"] {
+  pointer-events: auto !important;
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+/* Override any pointer-events: none on parent elements when Cloudinary widget is present */
+[data-radix-dialog-content]:has(~ [data-radix-portal]:has(iframe[src*="cloudinary"])) {
+  pointer-events: auto !important;
+}
+
+/* Ensure Cloudinary widget modal is clickable */
+div[class*="uw_widget"] button,
+div[class*="uw_widget"] a,
+div[class*="uw_widget"] input,
+div[id*="uw_widget"] button,
+div[id*="uw_widget"] a,
+div[id*="uw_widget"] input {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+html,
+body,
+:root {
+  height: 100%;
+}
+
+@layer base {
+  body {
+    @apply bg-black text-[#E7E9EA];
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+  }
+}
+
+@layer utilities {
+  .hover-bg {
+    @apply transition-colors duration-200;
+  }
+  .hover-bg:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+

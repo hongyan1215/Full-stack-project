@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "regions": ["sfo1"],
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_VERCEL_REGION": "sfo1"
+    }
+  },
+  "functions": {
+    "apps/web/app/api/**": {
+      "runtime": "nodejs20.x"
+    }
+  }
+}
+
+

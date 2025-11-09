@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  userId        String?   @unique
+  bio           String?   @db.String
+  bannerImage   String?
+  createdAt     DateTime  @default(now())
+
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]    @relation("UserPosts")
+  likes         Like[]
+  reposts       Repost[]
+  follows       Follow[]  @relation("follower")
+  following     Follow[]  @relation("following")
+  drafts        Draft[]
+  mentions      Mention[]  @relation("UserMentions")
+  notifications Notification[]  @relation("UserNotifications")
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Post {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  authorId      String    @db.ObjectId
+  text          String
+  linkCharCount Int
+  charCount     Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  parentId      String?   @db.ObjectId
+  isRepostOfId  String?   @db.ObjectId
+
+  author        User      @relation("UserPosts", fields: [authorId], references: [id])
+  likes         Like[]
+  reposts       Repost[]
+  mentions      Mention[]
+  hashtags      PostHashtag[]
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Repost {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Follow {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  followerId  String   @db.ObjectId
+  followingId String   @db.ObjectId
+  createdAt   DateTime @default(now())
+
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  following   User     @relation("following", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+
+model Draft {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  authorId  String   @db.ObjectId
+  text      String
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+model Hashtag {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  tag  String @unique
+  posts PostHashtag[]
+}
+
+model PostHashtag {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  postId     String @db.ObjectId
+  hashtagId  String @db.ObjectId
+  post       Post   @relation(fields: [postId], references: [id])
+  hashtag    Hashtag @relation(fields: [hashtagId], references: [id])
+
+  @@unique([postId, hashtagId])
+}
+
+model Mention {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  postId          String  @db.ObjectId
+  mentionedUserId String  @db.ObjectId
+  indexStart      Int
+  indexEnd        Int
+  post            Post   @relation(fields: [postId], references: [id])
+  mentionedUser   User   @relation("UserMentions", fields: [mentionedUserId], references: [id])
+}
+
+enum NotificationType {
+  like
+  comment
+  repost
+  follow
+}
+
+model Notification {
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String            @db.ObjectId
+  type      NotificationType
+  actorId   String            @db.ObjectId
+  postId    String?           @db.ObjectId
+  createdAt DateTime          @default(now())
+  readAt    DateTime?
+  user      User              @relation("UserNotifications", fields: [userId], references: [id])
+}
+
+
