@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MessageCircle, Repeat2, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -33,21 +33,34 @@ export function PostActions({
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [repostCount, setRepostCount] = useState(initialRepostCount);
   
+  // Track pending operations to prevent Pusher from overwriting optimistic updates
+  const pendingLikeRef = useRef<boolean>(false);
+  const pendingRepostRef = useRef<boolean>(false);
+  
   // Sync with props when they change (e.g., from Pusher updates)
+  // But only if we're not in the middle of a user-initiated operation
   useEffect(() => {
-    setIsLiked(initialIsLiked);
+    if (!pendingLikeRef.current) {
+      setIsLiked(initialIsLiked);
+    }
   }, [initialIsLiked]);
   
   useEffect(() => {
-    setIsReposted(initialIsReposted);
+    if (!pendingRepostRef.current) {
+      setIsReposted(initialIsReposted);
+    }
   }, [initialIsReposted]);
   
   useEffect(() => {
-    setLikeCount(initialLikeCount);
+    if (!pendingLikeRef.current) {
+      setLikeCount(initialLikeCount);
+    }
   }, [initialLikeCount]);
   
   useEffect(() => {
-    setRepostCount(initialRepostCount);
+    if (!pendingRepostRef.current) {
+      setRepostCount(initialRepostCount);
+    }
   }, [initialRepostCount]);
 
   const handleLike = async (e: React.MouseEvent) => {
@@ -56,6 +69,9 @@ export function PostActions({
       router.push("/api/auth/signin");
       return;
     }
+
+    // Mark operation as pending
+    pendingLikeRef.current = true;
 
     // Optimistic update
     const previousIsLiked = isLiked;
@@ -74,6 +90,7 @@ export function PostActions({
         // Revert optimistic update on error
         setIsLiked(previousIsLiked);
         setLikeCount(previousLikeCount);
+        pendingLikeRef.current = false;
         
         if (res.status === 401) {
           router.push("/api/auth/signin");
@@ -82,11 +99,18 @@ export function PostActions({
         throw new Error("Failed to toggle like");
       }
 
-      // Pusher will update the final state, but optimistic update provides immediate feedback
+      // Wait a bit for Pusher event to arrive, then allow sync
+      // This gives Pusher time to update, but we keep our optimistic state
+      setTimeout(() => {
+        pendingLikeRef.current = false;
+        // Sync with server state after Pusher has updated
+        setIsLiked(!previousIsLiked);
+      }, 500);
     } catch (error) {
       // Revert optimistic update on error
       setIsLiked(previousIsLiked);
       setLikeCount(previousLikeCount);
+      pendingLikeRef.current = false;
       console.error("Error toggling like:", error);
     }
   };
@@ -98,10 +122,14 @@ export function PostActions({
       return;
     }
 
+    // Mark operation as pending
+    pendingRepostRef.current = true;
+
     // Optimistic update
     const previousIsReposted = isReposted;
     const previousRepostCount = repostCount;
-    setIsReposted(!isReposted);
+    const newIsReposted = !isReposted;
+    setIsReposted(newIsReposted);
     setRepostCount((prev) => (previousIsReposted ? prev - 1 : prev + 1));
 
     try {
@@ -115,6 +143,7 @@ export function PostActions({
           // Revert optimistic update on error
           setIsReposted(previousIsReposted);
           setRepostCount(previousRepostCount);
+          pendingRepostRef.current = false;
           
           if (res.status === 401) {
             router.push("/api/auth/signin");
@@ -134,6 +163,7 @@ export function PostActions({
           // Revert optimistic update on error
           setIsReposted(previousIsReposted);
           setRepostCount(previousRepostCount);
+          pendingRepostRef.current = false;
           
           if (res.status === 401) {
             router.push("/api/auth/signin");
@@ -145,16 +175,23 @@ export function PostActions({
         const data = await res.json();
         // If already reposted, ensure state is correct
         if (data.status === "already_reposted") {
-          // State is already correct from optimistic update, but ensure it's synced
+          // State is already correct from optimistic update
           setIsReposted(true);
         }
       }
 
-      // Pusher will update the final state, but optimistic update provides immediate feedback
+      // Wait a bit for Pusher event to arrive, then allow sync
+      // This gives Pusher time to update, but we keep our optimistic state
+      setTimeout(() => {
+        pendingRepostRef.current = false;
+        // Sync with server state after Pusher has updated
+        setIsReposted(newIsReposted);
+      }, 500);
     } catch (error) {
       // Revert optimistic update on error
       setIsReposted(previousIsReposted);
       setRepostCount(previousRepostCount);
+      pendingRepostRef.current = false;
       console.error("Error toggling repost:", error);
     }
   };
