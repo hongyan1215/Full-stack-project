@@ -21,10 +21,6 @@
       "outputs": ["coverage/**", "junit.xml"],
       "cache": false
     },
-    "prisma:generate": {
-      "cache": false,
-      "outputs": ["node_modules/.prisma/**"]
-    },
     "db:migrate": {
       "cache": false
     },
