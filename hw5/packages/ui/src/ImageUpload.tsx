@@ -108,6 +108,7 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
         multiple: false,
         cropping: true,
         croppingAspectRatio: label === "Avatar" ? 1 : 16 / 9,
+        showSkipCropButton: false,
       },
       (error: any, result: any) => {
         // Log all events for debugging

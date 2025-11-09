@@ -274,6 +274,7 @@ export function EditProfileModal({
                         multiple: false,
                         cropping: true,
                         croppingAspectRatio: 16 / 9,
+                        showSkipCropButton: false,
                       },
                       (error: any, result: any) => {
                         // Log all events for debugging
@@ -371,6 +372,7 @@ export function EditProfileModal({
                         multiple: false,
                         cropping: true,
                         croppingAspectRatio: 1,
+                        showSkipCropButton: false,
                       },
                       (error: any, result: any) => {
                         // Log all events for debugging
