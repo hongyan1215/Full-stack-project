@@ -3,7 +3,7 @@ import { prisma } from "@db/src/index";
 import { redirect } from "next/navigation";
 import { NotificationsClient } from "./NotificationsClient";
 import Link from "next/link";
-import { ArrowLeft, Settings } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export default async function NotificationsPage() {
   const session = await auth();
@@ -80,19 +80,14 @@ export default async function NotificationsPage() {
     <div className="min-h-screen">
       {/* Header */}
       <div className="sticky top-0 z-10 border-b border-x-border bg-black/80 backdrop-blur-md">
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="rounded-full p-2 hover:bg-x-hover transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5 text-x-text" />
-            </Link>
-            <h1 className="text-xl font-bold text-x-text">Notifications</h1>
-          </div>
-          <button className="rounded-full p-2 hover:bg-x-hover transition-colors">
-            <Settings className="h-5 w-5 text-x-text" />
-          </button>
+        <div className="flex items-center gap-4 px-4 py-3">
+          <Link
+            href="/"
+            className="rounded-full p-2 hover:bg-x-hover transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5 text-x-text" />
+          </Link>
+          <h1 className="text-xl font-bold text-x-text">Notifications</h1>
         </div>
       </div>
 
