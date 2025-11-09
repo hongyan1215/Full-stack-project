@@ -6,11 +6,7 @@
 
 ## 🌐 Deployed Link
 
-<!-- 部署後請更新此連結 -->
-<!-- Update this link after deployment -->
-**Live Demo**: [https://nexus-app.vercel.app](https://nexus-app.vercel.app)
-
-> ⚠️ 部署後請更新上述連結 / Please update the above link after deployment
+https://hw5-bay.vercel.app
 
 ## 🚀 Features / 功能清單
 
