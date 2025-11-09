@@ -129,7 +129,11 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
           const newUrl = result.info.secure_url || result.info.url;
           if (newUrl) {
             console.log(`[${label || 'Image'}] Setting new image URL:`, newUrl);
-            setImageUrl(newUrl);
+            // Use functional update to ensure we get latest state
+            setImageUrl((prev) => {
+              console.log(`[${label || 'Image'}] Previous image:`, prev, "New:", newUrl);
+              return newUrl;
+            });
             onUpload(newUrl);
           }
           widgetOpenRef.current = false;
