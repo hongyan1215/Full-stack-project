@@ -29,19 +29,27 @@ export const authConfig: NextAuthConfig = {
   ],
   callbacks: {
     async session({ session, user }) {
-      if (user) {
-        session.user.id = user.id;
-        const dbUser = await prisma.user.findUnique({
-          where: { id: user.id },
-        });
-        if (dbUser?.userId) {
-          (session.user as any).userId = dbUser.userId;
+      try {
+        if (user) {
+          session.user.id = user.id;
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+          });
+          if (dbUser?.userId) {
+            (session.user as any).userId = dbUser.userId;
+          }
         }
+        return session;
+      } catch (error) {
+        console.error("Session callback error:", error);
+        return session;
       }
-      return session;
     },
   },
-  debug: process.env.NODE_ENV === "development",
+  pages: {
+    error: "/api/auth/error",
+  },
+  debug: true,
 };
 
 export const { auth, signIn, signOut, handlers } = NextAuth(authConfig);
