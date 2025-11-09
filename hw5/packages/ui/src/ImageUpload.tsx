@@ -11,6 +11,7 @@ interface ImageUploadProps {
 export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps) {
   const [imageUrl, setImageUrl] = useState(currentImage || "");
   const widgetOpenRef = useRef(false);
+  const [widgetIsOpen, setWidgetIsOpen] = useState(false);
 
   useEffect(() => {
     setImageUrl(currentImage || "");
@@ -36,6 +37,54 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
     };
   }, []);
 
+  // Ensure Cloudinary widget is interactive when it opens
+  useEffect(() => {
+    if (!widgetIsOpen) return;
+
+    const makeWidgetInteractive = () => {
+      // Find all Cloudinary widget elements
+      const cloudinaryElements = document.querySelectorAll(
+        'iframe[src*="cloudinary"], div[id*="uw_widget"], div[class*="uw_widget"], [data-testid="upload_widget"]'
+      );
+
+      cloudinaryElements.forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        // Set high z-index and ensure pointer events
+        htmlEl.style.zIndex = '99999';
+        htmlEl.style.pointerEvents = 'auto';
+        htmlEl.style.position = 'fixed';
+
+        // Also set for parent elements
+        let parent = htmlEl.parentElement;
+        while (parent && parent !== document.body) {
+          parent.style.zIndex = '99999';
+          parent.style.pointerEvents = 'auto';
+          parent = parent.parentElement;
+        }
+      });
+
+      // Find all buttons and interactive elements in Cloudinary widget
+      const cloudinaryButtons = document.querySelectorAll(
+        'div[id*="uw_widget"] button, div[class*="uw_widget"] button, div[id*="uw_widget"] a, div[class*="uw_widget"] a'
+      );
+
+      cloudinaryButtons.forEach((btn) => {
+        const htmlBtn = btn as HTMLElement;
+        htmlBtn.style.pointerEvents = 'auto';
+        htmlBtn.style.cursor = 'pointer';
+        htmlBtn.style.zIndex = '99999';
+      });
+    };
+
+    // Run immediately and also after a short delay to catch dynamically added elements
+    makeWidgetInteractive();
+    const interval = setInterval(makeWidgetInteractive, 100);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [widgetIsOpen]);
+
   const handleClick = () => {
     const cloudinary = (window as any).cloudinary;
     if (!cloudinary) {
@@ -49,6 +98,7 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
 
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dvpm2vr2q";
     widgetOpenRef.current = true;
+    setWidgetIsOpen(true);
 
     const widget = cloudinary.createUploadWidget(
       {
@@ -70,6 +120,7 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
           console.error("Cloudinary upload error:", error);
           alert(`Upload failed: ${error.message || 'Unknown error'}`);
           widgetOpenRef.current = false;
+          setWidgetIsOpen(false);
           return;
         }
 
@@ -82,11 +133,13 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
             onUpload(newUrl);
           }
           widgetOpenRef.current = false;
+          setWidgetIsOpen(false);
         }
 
         // Handle close event
         if (result && result.event === "close") {
           widgetOpenRef.current = false;
+          setWidgetIsOpen(false);
         }
       }
     );
