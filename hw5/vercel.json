@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn prisma:generate && yarn build --filter=web",
+  "buildCommand": "cd packages/db && yarn prisma generate && cd ../.. && yarn turbo build --filter=web",
   "installCommand": "yarn install --frozen-lockfile"
 }
 
