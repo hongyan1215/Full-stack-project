@@ -66,15 +66,15 @@ export async function GET(req: Request) {
 
     // Combine posts and reposts, mark reposts
     const allPosts = [
-      ...posts.map((post) => ({ ...post, isRepost: false })),
+      ...posts.map((post) => ({ ...post, isRepost: false as const, repostedAt: undefined })),
       ...reposts.map((repost) => ({
         ...repost.post,
-        isRepost: true,
+        isRepost: true as const,
         repostedAt: repost.createdAt,
       })),
     ].sort((a, b) => {
-      const dateA = a.isRepost ? (a.repostedAt as Date) : a.createdAt;
-      const dateB = b.isRepost ? (b.repostedAt as Date) : b.createdAt;
+      const dateA = a.isRepost && a.repostedAt ? a.repostedAt : a.createdAt;
+      const dateB = b.isRepost && b.repostedAt ? b.repostedAt : b.createdAt;
       return dateB.getTime() - dateA.getTime();
     });
 

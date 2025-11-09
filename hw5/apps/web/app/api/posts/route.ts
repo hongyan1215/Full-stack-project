@@ -85,7 +85,7 @@ export async function GET(req: Request) {
           .filter((r) => r.post !== null && r.post.parentId === null)
           .map((r) => ({
             ...r.post,
-            isRepost: true,
+            isRepost: true as const,
             repostedAt: r.createdAt,
             repostedBy: r.userId,
           }));
@@ -146,7 +146,7 @@ export async function GET(req: Request) {
         .filter((r) => r.post !== null && r.post.parentId === null)
         .map((r) => ({
           ...r.post,
-          isRepost: true,
+          isRepost: true as const,
           repostedAt: r.createdAt,
           repostedBy: r.userId,
         }));
@@ -155,13 +155,14 @@ export async function GET(req: Request) {
     // Mark posts as not reposts
     const markedPosts = posts.map((p) => ({
       ...p,
-      isRepost: false,
+      isRepost: false as const,
+      repostedAt: undefined,
     }));
 
     // Combine and sort by date
     const allPosts = [...markedPosts, ...reposts].sort((a, b) => {
-      const dateA = a.isRepost ? new Date(a.repostedAt) : a.createdAt;
-      const dateB = b.isRepost ? new Date(b.repostedAt) : b.createdAt;
+      const dateA = a.isRepost && a.repostedAt ? new Date(a.repostedAt) : a.createdAt;
+      const dateB = b.isRepost && b.repostedAt ? new Date(b.repostedAt) : b.createdAt;
       return dateB.getTime() - dateA.getTime();
     });
 
