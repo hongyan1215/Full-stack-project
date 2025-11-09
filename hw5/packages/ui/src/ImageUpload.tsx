@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface ImageUploadProps {
   onUpload: (url: string) => void;
@@ -10,6 +10,7 @@ interface ImageUploadProps {
 
 export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps) {
   const [imageUrl, setImageUrl] = useState(currentImage || "");
+  const widgetOpenRef = useRef(false);
 
   useEffect(() => {
     setImageUrl(currentImage || "");
@@ -42,7 +43,12 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
       return;
     }
 
+    if (widgetOpenRef.current) {
+      return; // Prevent opening multiple widgets
+    }
+
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dvpm2vr2q";
+    widgetOpenRef.current = true;
 
     const widget = cloudinary.createUploadWidget(
       {
@@ -52,26 +58,40 @@ export function ImageUpload({ onUpload, currentImage, label }: ImageUploadProps)
         multiple: false,
         cropping: true,
         croppingAspectRatio: label === "Avatar" ? 1 : 16 / 9,
-        croppingShowDimensions: true,
-        croppingCoordinatesMode: "custom",
-        croppingValidateDimensions: true,
-        showSkipCropButton: false,
       },
       (error: any, result: any) => {
-        if (error) {
+        // Log all events for debugging
+        if (result?.event) {
+          console.log(`[${label || 'Image'}] Cloudinary event: "${result.event}"`, result.info ? `URL: ${result.info?.secure_url || result.info?.url}` : '');
+        }
+
+        // Handle errors
+        if (error && error.status !== "success") {
           console.error("Cloudinary upload error:", error);
           alert(`Upload failed: ${error.message || 'Unknown error'}`);
+          widgetOpenRef.current = false;
           return;
         }
-        if (result && result.event === "success") {
-          // Use the cropped/transformed URL if available
-          const url = result.info.secure_url;
-          setImageUrl(url);
-          onUpload(url);
+
+        // Handle success - this is the main event we care about
+        if (result && result.event === "success" && result.info) {
+          const newUrl = result.info.secure_url || result.info.url;
+          if (newUrl) {
+            console.log(`[${label || 'Image'}] Setting new image URL:`, newUrl);
+            setImageUrl(newUrl);
+            onUpload(newUrl);
+          }
+          widgetOpenRef.current = false;
+        }
+
+        // Handle close event
+        if (result && result.event === "close") {
+          widgetOpenRef.current = false;
         }
       }
     );
 
+    console.log(`Opening Cloudinary widget for ${label || 'image'}`);
     widget.open();
   };
 
