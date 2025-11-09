@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd apps/web && yarn prisma:generate && cd ../.. && yarn build",
+  "buildCommand": "yarn prisma:generate && yarn build",
   "installCommand": "yarn install",
   "regions": ["sfo1"],
   "build": {
