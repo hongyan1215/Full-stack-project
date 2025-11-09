@@ -18,45 +18,37 @@ interface PostActionsProps {
 export function PostActions({
   postId,
   replyCount = 0,
-  repostCount,
-  likeCount,
-  isLiked = false,
-  isReposted = false,
+  repostCount: initialRepostCount,
+  likeCount: initialLikeCount,
+  isLiked: initialIsLiked = false,
+  isReposted: initialIsReposted = false,
   onReply,
   currentUserId,
 }: PostActionsProps) {
-  const [liked, setLiked] = useState(isLiked);
-  const [likes, setLikes] = useState(likeCount);
-  const [reposted, setReposted] = useState(isReposted);
-  const [reposts, setReposts] = useState(repostCount);
-  const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
-
-  // Sync states when props change (for real-time updates from Pusher)
-  // Skip if we're currently updating to avoid conflicts
+  
+  // Local state for optimistic updates
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [isReposted, setIsReposted] = useState(initialIsReposted);
+  const [likeCount, setLikeCount] = useState(initialLikeCount);
+  const [repostCount, setRepostCount] = useState(initialRepostCount);
+  
+  // Sync with props when they change (e.g., from Pusher updates)
   useEffect(() => {
-    if (!isUpdating) {
-      setLiked(isLiked);
-    }
-  }, [isLiked, isUpdating]);
-
+    setIsLiked(initialIsLiked);
+  }, [initialIsLiked]);
+  
   useEffect(() => {
-    if (!isUpdating) {
-      setLikes(likeCount);
-    }
-  }, [likeCount, isUpdating]);
-
+    setIsReposted(initialIsReposted);
+  }, [initialIsReposted]);
+  
   useEffect(() => {
-    if (!isUpdating) {
-      setReposted(isReposted);
-    }
-  }, [isReposted, isUpdating]);
-
+    setLikeCount(initialLikeCount);
+  }, [initialLikeCount]);
+  
   useEffect(() => {
-    if (!isUpdating) {
-      setReposts(repostCount);
-    }
-  }, [repostCount, isUpdating]);
+    setRepostCount(initialRepostCount);
+  }, [initialRepostCount]);
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -66,12 +58,10 @@ export function PostActions({
     }
 
     // Optimistic update
-    const previousLiked = liked;
-    const previousLikes = likes;
-
-    setIsUpdating(true);
-    setLiked(!liked);
-    setLikes(liked ? Math.max(0, likes - 1) : likes + 1);
+    const previousIsLiked = isLiked;
+    const previousLikeCount = likeCount;
+    setIsLiked(!isLiked);
+    setLikeCount((prev) => (previousIsLiked ? prev - 1 : prev + 1));
 
     try {
       const res = await fetch("/api/likes", {
@@ -81,10 +71,10 @@ export function PostActions({
       });
 
       if (!res.ok) {
-        // Revert on error
-        setLiked(previousLiked);
-        setLikes(previousLikes);
-
+        // Revert optimistic update on error
+        setIsLiked(previousIsLiked);
+        setLikeCount(previousLikeCount);
+        
         if (res.status === 401) {
           router.push("/api/auth/signin");
           return;
@@ -92,14 +82,12 @@ export function PostActions({
         throw new Error("Failed to toggle like");
       }
 
-      // Allow Pusher updates after a short delay
-      setTimeout(() => setIsUpdating(false), 1000);
+      // Pusher will update the final state, but optimistic update provides immediate feedback
     } catch (error) {
+      // Revert optimistic update on error
+      setIsLiked(previousIsLiked);
+      setLikeCount(previousLikeCount);
       console.error("Error toggling like:", error);
-      // Revert on error
-      setLiked(previousLiked);
-      setLikes(previousLikes);
-      setIsUpdating(false);
     }
   };
 
@@ -111,25 +99,23 @@ export function PostActions({
     }
 
     // Optimistic update
-    const previousReposted = reposted;
-    const previousReposts = reposts;
-
-    setIsUpdating(true);
-    setReposted(!reposted);
-    setReposts(reposted ? Math.max(0, reposts - 1) : reposts + 1);
+    const previousIsReposted = isReposted;
+    const previousRepostCount = repostCount;
+    setIsReposted(!isReposted);
+    setRepostCount((prev) => (previousIsReposted ? prev - 1 : prev + 1));
 
     try {
-      if (previousReposted) {
+      if (previousIsReposted) {
         // Unrepost
         const res = await fetch(`/api/reposts/${postId}`, {
           method: "DELETE",
         });
 
         if (!res.ok) {
-          // Revert on error
-          setReposted(previousReposted);
-          setReposts(previousReposts);
-
+          // Revert optimistic update on error
+          setIsReposted(previousIsReposted);
+          setRepostCount(previousRepostCount);
+          
           if (res.status === 401) {
             router.push("/api/auth/signin");
             return;
@@ -145,26 +131,31 @@ export function PostActions({
         });
 
         if (!res.ok) {
-          // Revert on error
-          setReposted(previousReposted);
-          setReposts(previousReposts);
-
+          // Revert optimistic update on error
+          setIsReposted(previousIsReposted);
+          setRepostCount(previousRepostCount);
+          
           if (res.status === 401) {
             router.push("/api/auth/signin");
             return;
           }
           throw new Error("Failed to repost");
         }
+        
+        const data = await res.json();
+        // If already reposted, ensure state is correct
+        if (data.status === "already_reposted") {
+          // State is already correct from optimistic update, but ensure it's synced
+          setIsReposted(true);
+        }
       }
 
-      // Allow Pusher updates after a short delay
-      setTimeout(() => setIsUpdating(false), 1000);
+      // Pusher will update the final state, but optimistic update provides immediate feedback
     } catch (error) {
+      // Revert optimistic update on error
+      setIsReposted(previousIsReposted);
+      setRepostCount(previousRepostCount);
       console.error("Error toggling repost:", error);
-      // Revert on error
-      setReposted(previousReposted);
-      setReposts(previousReposts);
-      setIsUpdating(false);
     }
   };
 
@@ -194,42 +185,42 @@ export function PostActions({
       <button
         onClick={handleRepost}
         className={`flex items-center gap-2 transition-colors group ${
-          reposted
+          isReposted
             ? "text-green-500"
             : "text-x-textSecondary hover:text-green-500"
         }`}
       >
         <div
           className={`p-2 rounded-full transition-colors ${
-            reposted
+            isReposted
               ? "bg-green-500/10"
               : "group-hover:bg-green-500/10"
           }`}
         >
           <Repeat2 className="h-5 w-5" />
         </div>
-        {reposts > 0 && <span className="text-sm">{reposts}</span>}
+        {repostCount > 0 && <span className="text-sm">{repostCount}</span>}
       </button>
 
       {/* Like */}
       <button
         onClick={handleLike}
         className={`flex items-center gap-2 transition-colors group ${
-          liked
+          isLiked
             ? "text-red-500"
             : "text-x-textSecondary hover:text-red-500"
         }`}
       >
         <div
           className={`p-2 rounded-full transition-colors ${
-            liked
+            isLiked
               ? "bg-red-500/10"
               : "group-hover:bg-red-500/10"
           }`}
         >
-          <Heart className={`h-5 w-5 ${liked ? "fill-current" : ""}`} />
+          <Heart className={`h-5 w-5 ${isLiked ? "fill-current" : ""}`} />
         </div>
-        {likes > 0 && <span className="text-sm">{likes}</span>}
+        {likeCount > 0 && <span className="text-sm">{likeCount}</span>}
       </button>
     </div>
   );
