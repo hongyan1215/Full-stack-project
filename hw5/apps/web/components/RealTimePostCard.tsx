@@ -52,6 +52,7 @@ export function RealTimePostCard({
         // This will sync with PostActions component through prop updates
         setPost((prev) => ({
           ...prev,
+          isLiked: data.userId === currentUserId ? true : prev.isLiked,
           _count: {
             ...prev._count,
             likes: data.likeCount,
@@ -59,7 +60,7 @@ export function RealTimePostCard({
         }));
       }
     },
-    [post.id]
+    [post.id, currentUserId]
   );
 
   const handleLikeRemoved = useCallback(
@@ -68,6 +69,7 @@ export function RealTimePostCard({
         // Update like count from Pusher event (real-time update)
         setPost((prev) => ({
           ...prev,
+          isLiked: data.userId === currentUserId ? false : prev.isLiked,
           _count: {
             ...prev._count,
             likes: data.likeCount,
@@ -75,7 +77,7 @@ export function RealTimePostCard({
         }));
       }
     },
-    [post.id]
+    [post.id, currentUserId]
   );
 
   // Handle comment added event (for reply count updates)
