@@ -27,8 +27,8 @@ export class LLMService {
       console.warn('GOOGLE_API_KEY is not set');
     }
     this.genAI = new GoogleGenerativeAI(apiKey || '');
-    // Using gemini-1.5-pro (stable)
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    // Using gemini-3-pro-preview as requested
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
   }
 
   public async generateResponse(history: IGameHistory[]): Promise<string> {
@@ -40,7 +40,7 @@ export class LLMService {
       // Re-initializing with systemInstruction for best practice.
       
       const modelWithSystem = this.genAI.getGenerativeModel({ 
-        model: 'gemini-1.5-pro',
+        model: 'gemini-3-pro-preview',
         systemInstruction: SYSTEM_PROMPT
       });
 
