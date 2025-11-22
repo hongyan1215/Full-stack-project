@@ -27,8 +27,8 @@ export class LLMService {
       console.warn('GOOGLE_API_KEY is not set');
     }
     this.genAI = new GoogleGenerativeAI(apiKey || '');
-    // Using gemini-3-pro-preview as requested
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
+    // Using gemini-1.5-pro (stable)
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
   }
 
   public async generateResponse(history: IGameHistory[]): Promise<string> {
@@ -36,13 +36,11 @@ export class LLMService {
       // Convert DB history to Gemini format
       // Gemini uses 'user' and 'model' roles.
       // We map 'assistant' -> 'model'.
-      // We also prepend the System Prompt to the first message or use systemInstruction if supported.
       
-      // Construct the prompt history
       // Re-initializing with systemInstruction for best practice.
       
       const modelWithSystem = this.genAI.getGenerativeModel({ 
-        model: 'gemini-3-pro-preview',
+        model: 'gemini-1.5-pro',
         systemInstruction: SYSTEM_PROMPT
       });
 
