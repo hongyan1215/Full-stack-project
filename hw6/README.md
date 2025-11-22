@@ -6,7 +6,7 @@ Bot 扮演「地下城主 (DM)」的角色（設定為末日倖存的廣播員�
 ## 1. 部署連結 (Deployment)
 
 - **Line Bot 加入好友連結**: [https://lin.ee/y20tg9H](https://lin.ee/y20tg9H)
-- **管理後台 (Admin Dashboard)**: [https://wp1141.vercel.app/admin](https://wp1141.vercel.app/admin) (請使用此連結查看玩家列表與對話紀錄)
+- **管理後台 (Admin Dashboard)**: [https://wp1141-five-indol.vercel.app/admin](https://wp1141-five-indol.vercel.app/admin) (請使用此連結查看玩家列表與對話紀錄)
 
 ## 2. Chatbot 設計 (Chatbot Design)
 
