@@ -49,34 +49,29 @@ export class LLMService {
         parts: [{ text: h.content }],
       }));
 
-      // Start chat with history
-      const chat = modelWithSystem.startChat({
-        history: chatHistory,
-      });
-
-      // Send empty message to trigger generation based on history? 
-      // No, startChat prepares state. We need to send the *latest* user message if it's not in history yet?
-      // Usually, the Controller/Service passes the full history INCLUDING the latest user message.
-      // However, Google's startChat expects history to be *past* turns, and we send the *new* message via sendMessage.
-      // BUT, if our DB history ALREADY contains the latest user message, we should pop it out to send it.
-      
+      // Extract the last user message (which we'll send via sendMessage)
       const pastHistory = [...chatHistory];
       const lastMessage = pastHistory.pop();
 
       if (!lastMessage || lastMessage.role !== 'user') {
-        // If the last message isn't from user (e.g. game start), we might need to just trigger generation.
-        // But 'sendMessage' requires content.
-        // If it's a start of game, maybe the history only has system greeting?
-        // Actually, for "Start", the GameService adds an initial assistant message.
-        // Then user replies.
-        // So history usually ends with User message when calling this.
-        // Fallback: if last is model, we just send a "continue" signal or similar?
-        // Let's assume strict flow: User sends msg -> Saved to DB -> Call LLM.
-        // So last message IS user message.
         throw new Error('Invalid history state: Last message must be from user');
       }
 
-      // Restart chat with past history
+      // Gemini requires history to start with 'user' role.
+      // Remove any leading 'model' messages from pastHistory.
+      while (pastHistory.length > 0 && pastHistory[0].role === 'model') {
+        pastHistory.shift();
+      }
+
+      // If pastHistory is empty or still starts with model, we can't use history.
+      // In this case, just send the message without history (first turn).
+      if (pastHistory.length === 0 || pastHistory[0].role !== 'user') {
+        const chatSession = modelWithSystem.startChat();
+        const result = await chatSession.sendMessage(lastMessage.parts[0].text);
+        return result.response.text();
+      }
+
+      // Start chat with cleaned history
       const chatSession = modelWithSystem.startChat({
         history: pastHistory,
       });
