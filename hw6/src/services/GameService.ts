@@ -1,6 +1,7 @@
 import GameSession, { IGameSession } from '@/models/GameSession';
 import dbConnect from '@/lib/db';
 import { Types } from 'mongoose';
+import { llmService } from './LLMService';
 
 export class GameService {
   /**
@@ -38,9 +39,17 @@ export class GameService {
     });
     await session.save();
 
-    // TODO: Call LLM Service here
-    // For now, return a placeholder response
-    const replyText = `(系統回應測試) 你說了: "${text}"。目前這只是簡單的回聲，真正的冒險即將展開。`;
+    // Call LLM Service
+    let replyText: string;
+    try {
+      // Only send recent N messages to context window to save tokens/cost and performance
+      // e.g. last 10 messages
+      const recentHistory = session.history.slice(-10);
+      replyText = await llmService.generateResponse(recentHistory);
+    } catch (error) {
+      console.error('LLM Service Error:', error);
+      replyText = "*無線電訊號受到嚴重干擾...（請稍後重試）*";
+    }
 
     // Save assistant response to history
     session.history.push({
