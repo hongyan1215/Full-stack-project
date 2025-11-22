@@ -27,8 +27,8 @@ export class LLMService {
       console.warn('GOOGLE_API_KEY is not set');
     }
     this.genAI = new GoogleGenerativeAI(apiKey || '');
-    // Using gemini-1.5-pro as requested
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    // Using gemini-3-pro-preview as requested
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
   }
 
   public async generateResponse(history: IGameHistory[]): Promise<string> {
@@ -36,16 +36,13 @@ export class LLMService {
       // Convert DB history to Gemini format
       // Gemini uses 'user' and 'model' roles.
       // We map 'assistant' -> 'model'.
-      // We also prepend the System Prompt to the first message or use systemInstruction if supported (1.5 pro supports it).
+      // We also prepend the System Prompt to the first message or use systemInstruction if supported.
       
       // Construct the prompt history
-      // Note: gemini-1.5-pro supports systemInstruction in the config, 
-      // but sticking to chat history injection is robust for now or use the dedicated API property.
-      // Let's use systemInstruction if calling getGenerativeModel, but here we initialized it already.
-      // Re-initializing with systemInstruction for best practice with 1.5 Pro.
+      // Re-initializing with systemInstruction for best practice.
       
       const modelWithSystem = this.genAI.getGenerativeModel({ 
-        model: 'gemini-1.5-pro',
+        model: 'gemini-3-pro-preview',
         systemInstruction: SYSTEM_PROMPT
       });
 
