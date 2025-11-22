@@ -87,12 +87,9 @@ Bot 擔任「地下城主 (DM)」的角色。使用者傳送文字指令（如�
    ```
    將 Ngrok 提供的 URL (例如 `https://xxxx.ngrok-free.app/api/webhook`) 填入 Line Developers Console 的 Webhook URL 並驗證。
 
-## 4. 功能檢核表 (Feature Checklist)
+## 4. 採用的進階功能 (Feature Checklist)
 
 - [x] **Session 管理**：透過 MongoDB 追蹤並儲存完整對話流程與狀態。
 - [x] **使用者分析**：管理後台可顯示總對話數、活躍使用者列表與狀態。
-- [ ] **使用 Bottender 套件**：(本專案採用官方 `@line/bot-sdk` 實作，更輕量且易於整合 Next.js App Router)。
-- [ ] **進階篩選**：目前管理後台提供基本列表，依活躍時間排序。
-- [ ] **回應客製化**：後台目前尚未提供調整 System Prompt 的 UI，需修改代碼。
 - [x] **Webhook 健康檢查**：透過 Line Developers Console 的 Verify 功能確認 `/api/webhook` 狀態。
 - [x] **優雅降級**：實作錯誤捕捉機制，避免 Bot 無回應。
