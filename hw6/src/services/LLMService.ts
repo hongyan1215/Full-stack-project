@@ -27,12 +27,16 @@ export class LLMService {
       console.warn('GOOGLE_API_KEY is not set');
     }
     this.genAI = new GoogleGenerativeAI(apiKey || '');
-    // Using gemini-3-pro-preview as requested
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
+    // Using gemini-1.5-flash for faster response (to avoid Vercel timeout)
+    // If you need better quality, switch back to gemini-3-pro-preview but consider upgrading Vercel plan
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
   }
 
   public async generateResponse(history: IGameHistory[]): Promise<string> {
     try {
+      // Limit history to last 8 messages to reduce token count and improve speed
+      const recentHistory = history.slice(-8);
+      
       // Convert DB history to Gemini format
       // Gemini uses 'user' and 'model' roles.
       // We map 'assistant' -> 'model'.
@@ -40,11 +44,11 @@ export class LLMService {
       // Re-initializing with systemInstruction for best practice.
       
       const modelWithSystem = this.genAI.getGenerativeModel({ 
-        model: 'gemini-3-pro-preview',
+        model: 'gemini-1.5-flash',
         systemInstruction: SYSTEM_PROMPT
       });
 
-      const chatHistory = history.map(h => ({
+      const chatHistory = recentHistory.map(h => ({
         role: h.role === 'assistant' ? 'model' : 'user',
         parts: [{ text: h.content }],
       }));
@@ -67,7 +71,13 @@ export class LLMService {
       // In this case, just send the message without history (first turn).
       if (pastHistory.length === 0 || pastHistory[0].role !== 'user') {
         const chatSession = modelWithSystem.startChat();
-        const result = await chatSession.sendMessage(lastMessage.parts[0].text);
+        // Add timeout wrapper (20 seconds max for LLM call)
+        const result = await Promise.race([
+          chatSession.sendMessage(lastMessage.parts[0].text),
+          new Promise<never>((_, reject) => 
+            setTimeout(() => reject(new Error('LLM timeout after 20s')), 20000)
+          )
+        ]);
         return result.response.text();
       }
 
@@ -76,7 +86,13 @@ export class LLMService {
         history: pastHistory,
       });
 
-      const result = await chatSession.sendMessage(lastMessage.parts[0].text);
+      // Add timeout wrapper (20 seconds max for LLM call)
+      const result = await Promise.race([
+        chatSession.sendMessage(lastMessage.parts[0].text),
+        new Promise<never>((_, reject) => 
+          setTimeout(() => reject(new Error('LLM timeout after 20s')), 20000)
+        )
+      ]);
       const response = result.response;
       return response.text();
       
