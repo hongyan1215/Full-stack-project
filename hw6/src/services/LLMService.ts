@@ -27,9 +27,8 @@ export class LLMService {
       console.warn('GOOGLE_API_KEY is not set');
     }
     this.genAI = new GoogleGenerativeAI(apiKey || '');
-    // Using gemini-1.5-flash for faster response (to avoid Vercel timeout)
-    // If you need better quality, switch back to gemini-3-pro-preview but consider upgrading Vercel plan
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    // Using gemini-2-flash-lite for faster response (to avoid Vercel timeout)
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2-flash-lite' });
   }
 
   public async generateResponse(history: IGameHistory[]): Promise<string> {
@@ -44,7 +43,7 @@ export class LLMService {
       // Re-initializing with systemInstruction for best practice.
       
       const modelWithSystem = this.genAI.getGenerativeModel({ 
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2-flash-lite',
         systemInstruction: SYSTEM_PROMPT
       });
 
