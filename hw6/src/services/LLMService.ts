@@ -27,8 +27,8 @@ export class LLMService {
       console.warn('GOOGLE_API_KEY is not set');
     }
     this.genAI = new GoogleGenerativeAI(apiKey || '');
-    // Using gemini-2-flash-lite for faster response (to avoid Vercel timeout)
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2-flash-lite' });
+    // Using gemini-2.5-flash-lite for faster response (to avoid Vercel timeout)
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
   }
 
   public async generateResponse(history: IGameHistory[]): Promise<string> {
@@ -43,7 +43,7 @@ export class LLMService {
       // Re-initializing with systemInstruction for best practice.
       
       const modelWithSystem = this.genAI.getGenerativeModel({ 
-        model: 'gemini-2-flash-lite',
+        model: 'gemini-2.5-flash-lite',
         systemInstruction: SYSTEM_PROMPT
       });
 
