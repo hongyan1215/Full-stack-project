@@ -3,6 +3,10 @@
 這是一個基於 **Next.js (App Router)** + **TypeScript** + **MongoDB** + **Google Gemini LLM** 開發的 Line Bot 文字冒險遊戲。
 Bot 扮演「地下城主 (DM)」的角色（設定為末日倖存的廣播員），根據使用者的輸入進行互動式敘事。
 
+## 因為很有趣所以我還做了另一個記帳bot
+- **Line Bot 加入好友連結**: [https://lin.ee/2azi5Sx](https://lin.ee/2azi5Sx)
+- **管理後台 (Admin Dashboard)**: 由bot內部開啟專屬後台
+
 ## 1. 部署連結 (Deployment)
 
 - **Line Bot 加入好友連結**: [https://lin.ee/y20tg9H](https://lin.ee/y20tg9H)
