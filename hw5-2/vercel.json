@@ -1,0 +1,20 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/weekly-report",
+      "schedule": "0 1 * * 1"
+    }
+  ],
+  "functions": {
+    "src/app/api/webhook/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/stats/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/transactions/route.ts": {
+      "maxDuration": 10
+    }
+  }
+}
+

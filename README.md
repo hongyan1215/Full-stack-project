@@ -4,7 +4,7 @@
 
 ## 專案概述
 
-本儲存庫包含 2024 學年度第一學期 Web Programming 課程的所有作業與最終專題。每個作業都是循序漸進地學習現代 Web 開發技術，從基礎的前端開發到全端應用，最後完成一個整合所有技能的期末專題。
+本儲存庫包含 2025 學年度第一學期 Web Programming 課程的所有作業與最終專題。每個作業都是循序漸進地學習現代 Web 開發技術，從基礎的前端開發到全端應用，最後完成一個整合所有技能的期末專題。
 
 ## 專案結構
 
@@ -129,6 +129,32 @@
 
 ---
 
+### 📁 hw5-2 - 記帳 Line Bot
+
+基於 Next.js + Google Gemini AI 開發的智慧記帳 Line Bot，支援自然語言記帳與預算管理功能。
+
+**技術棧**：
+- Next.js 16 (App Router)
+- TypeScript
+- MongoDB + Mongoose
+- Google Gemini AI (自然語言理解)
+- Line Messaging API
+- Chart.js (資料視覺化)
+- Tailwind CSS
+
+**主要功能**：
+- **自然語言記帳**：使用 AI 理解並記錄交易（如「午餐150元」）
+- **交易管理**：新增、修改、刪除交易記錄
+- **預算管理**：設定類別預算與總預算，超支提醒
+- **資料分析**：支出/收入統計、類別分佈圖表
+- **管理後台**：Dashboard 顯示交易記錄、統計圖表、篩選功能
+- **多語言支援**：繁體中文/英文介面
+- **定期報表**：週報自動推播
+
+**Line Bot 連結**: https://lin.ee/2azi5Sx
+
+---
+
 ### 📁 final-project - 自律軌跡 (Self-Discipline Track)
 
 功能豐富的現代化行事曆應用程式，採用 Next.js 14、React 19 和 TypeScript 開發。核心差異化功能為課表管理系統。
@@ -170,6 +196,8 @@ hw4: Full-stack (React + Express + SQLite)
   ↓
 hw5: Full-stack + 認證 (Next.js + MongoDB + NextAuth)
   ↓
+hw5-2: Full-stack + AI + Line Bot (Next.js + Gemini + Line API)
+  ↓
 hw6: Full-stack + AI 整合 (Next.js + Gemini API)
   ↓
 final-project: 完整產品級應用 (整合所有技術)
@@ -207,4 +235,4 @@ npm run dev  # 或 yarn dev
 ---
 
 **課程**: 國立台灣大學 資訊工程學研究所 Web Programming 114-1  
-**學期**: 2024 學年度第一學期
+**學期**: 2025 學年度第一學期
