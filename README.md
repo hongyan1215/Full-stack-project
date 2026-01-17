@@ -129,7 +129,7 @@
 
 ---
 
-### 📁 hw5-2 - 記帳 Line Bot
+### 📁 hw6-2 - 記帳 Line Bot
 
 基於 Next.js + Google Gemini AI 開發的智慧記帳 Line Bot，支援自然語言記帳與預算管理功能。
 
@@ -196,9 +196,9 @@ hw4: Full-stack (React + Express + SQLite)
   ↓
 hw5: Full-stack + 認證 (Next.js + MongoDB + NextAuth)
   ↓
-hw5-2: Full-stack + AI + Line Bot (Next.js + Gemini + Line API)
-  ↓
 hw6: Full-stack + AI 整合 (Next.js + Gemini API)
+  ↓
+hw6-2: Full-stack + AI + Line Bot (Next.js + Gemini + Line API)
   ↓
 final-project: 完整產品級應用 (整合所有技術)
 ```
