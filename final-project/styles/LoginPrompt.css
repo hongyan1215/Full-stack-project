@@ -1,0 +1,205 @@
+.login-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-overlay, rgba(0, 0, 0, 0.7));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.login-prompt-content {
+  background: var(--bg-modal, #ffffff);
+  border-radius: var(--radius-xl, 24px);
+  padding: 3rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: var(--shadow-lg, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04));
+  border: 1px solid var(--border-light, #e2e8f0);
+  text-align: center;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.login-prompt-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.login-prompt-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary, #1e293b);
+  margin: 0 0 1rem 0;
+  font-family: var(--font-family-display, system-ui, -apple-system, sans-serif);
+}
+
+.login-prompt-description {
+  font-size: 1rem;
+  color: var(--text-secondary, #64748b);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.login-prompt-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.login-prompt-features li {
+  font-size: 0.9375rem;
+  color: var(--text-primary, #1e293b);
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+  line-height: 1.5;
+}
+
+.login-prompt-features li:last-child {
+  margin-bottom: 0;
+}
+
+.login-prompt-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.login-prompt-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-md, 12px);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-prompt-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.login-prompt-btn:hover::before {
+  opacity: 1;
+}
+
+.login-prompt-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+.login-prompt-btn:active {
+  transform: translateY(0);
+}
+
+.login-prompt-btn-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.login-prompt-btn-google {
+  background: #ffffff;
+  color: #1e293b;
+  border-color: #e2e8f0;
+}
+
+.login-prompt-btn-google:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.login-prompt-btn-github {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+.login-prompt-btn-github:hover {
+  background: #334155;
+  border-color: #334155;
+  box-shadow: 0 8px 15px -3px rgba(30, 41, 59, 0.3);
+}
+
+.login-prompt-btn-dev {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.login-prompt-btn-dev:hover {
+  background: #059669;
+  border-color: #059669;
+  box-shadow: 0 8px 15px -3px rgba(16, 185, 129, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .login-prompt-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .login-prompt-title {
+    font-size: 1.5rem;
+  }
+
+  .login-prompt-icon {
+    font-size: 3rem;
+  }
+}
+

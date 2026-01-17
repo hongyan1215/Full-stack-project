@@ -1,0 +1,311 @@
+/* Onboarding Tour Styles */
+
+.onboarding-tour {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+/* 覆蓋層 */
+.onboarding-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  pointer-events: all;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.onboarding-overlay.center-mode {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+/* 高亮區域 */
+.onboarding-highlight {
+  border: 3px solid var(--accent-color, #3b82f6);
+  border-radius: 8px;
+  box-shadow: 
+    0 0 0 4px rgba(59, 130, 246, 0.2),
+    0 0 20px rgba(59, 130, 246, 0.5),
+    0 0 40px rgba(59, 130, 246, 0.3);
+  background-color: transparent;
+  pointer-events: none;
+  animation: highlightFadeIn 0.3s ease-in-out;
+}
+
+.onboarding-highlight.pulse {
+  animation: highlightPulse 2s ease-in-out infinite, highlightFadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes highlightFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes highlightPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 4px rgba(59, 130, 246, 0.2),
+      0 0 20px rgba(59, 130, 246, 0.5),
+      0 0 40px rgba(59, 130, 246, 0.3);
+    border-color: var(--accent-color, #3b82f6);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 6px rgba(59, 130, 246, 0.3),
+      0 0 30px rgba(59, 130, 246, 0.7),
+      0 0 60px rgba(59, 130, 246, 0.5);
+    border-color: var(--accent-color-hover, #2563eb);
+  }
+}
+
+/* 工具提示 */
+.onboarding-tooltip {
+  pointer-events: all;
+  max-width: 400px;
+  min-width: 320px;
+  animation: tooltipFadeIn 0.3s ease-in-out;
+  position: fixed; /* 使用 fixed 定位確保相對於視窗 */
+}
+
+.onboarding-tooltip.center-tooltip {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  max-width: 500px;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.onboarding-tooltip-content {
+  background: var(--bg-modal, #ffffff);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-light, rgba(0, 0, 0, 0.1));
+  color: var(--text-primary, #1e293b);
+}
+
+.onboarding-progress {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #64748b);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.onboarding-tooltip-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  color: var(--text-primary, #1e293b);
+  line-height: 1.4;
+}
+
+.onboarding-tooltip-description {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary, #64748b);
+  margin-bottom: 1.5rem;
+  white-space: pre-line;
+}
+
+.onboarding-tooltip-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.onboarding-btn {
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.onboarding-btn-primary {
+  background-color: var(--accent-color, #3b82f6);
+  color: white;
+}
+
+.onboarding-btn-primary:hover {
+  background-color: var(--accent-color-hover, #2563eb);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.onboarding-btn-secondary {
+  background-color: var(--bg-cell, #f8fafc);
+  color: var(--text-primary, #1e293b);
+  border: 1px solid var(--border-light, rgba(0, 0, 0, 0.1));
+}
+
+.onboarding-btn-secondary:hover {
+  background-color: var(--bg-cell-hover, #f1f5f9);
+}
+
+.onboarding-btn-skip {
+  background-color: transparent;
+  color: var(--text-secondary, #64748b);
+  border: none;
+}
+
+.onboarding-btn-skip:hover {
+  color: var(--text-primary, #1e293b);
+  background-color: var(--bg-cell, #f8fafc);
+}
+
+/* 工具提示箭頭（可選） */
+.onboarding-tooltip.top::before,
+.onboarding-tooltip.bottom::after,
+.onboarding-tooltip.left::before,
+.onboarding-tooltip.right::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.onboarding-tooltip.bottom::after {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 10px 10px 10px;
+  border-color: transparent transparent var(--bg-modal, #ffffff) transparent;
+}
+
+.onboarding-tooltip.top::before {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px 10px 0 10px;
+  border-color: var(--bg-modal, #ffffff) transparent transparent transparent;
+}
+
+.onboarding-tooltip.right::before {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 10px 10px 10px 0;
+  border-color: transparent var(--bg-modal, #ffffff) transparent transparent;
+}
+
+.onboarding-tooltip.left::before {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 10px 0 10px 10px;
+  border-color: transparent transparent transparent var(--bg-modal, #ffffff);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .onboarding-tooltip {
+    max-width: calc(100vw - 2rem);
+    min-width: auto;
+    margin: 1rem;
+  }
+
+  .onboarding-tooltip.center-tooltip {
+    max-width: calc(100vw - 2rem);
+  }
+
+  .onboarding-tooltip-content {
+    padding: 1.25rem;
+  }
+
+  .onboarding-tooltip-title {
+    font-size: 1.125rem;
+  }
+
+  .onboarding-tooltip-description {
+    font-size: 0.875rem;
+  }
+
+  .onboarding-tooltip-actions {
+    flex-direction: column;
+  }
+
+  .onboarding-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .onboarding-highlight {
+    border-width: 2px;
+  }
+}
+
+/* 確保工具提示在移動設備上可點擊 */
+@media (max-width: 768px) {
+  .onboarding-tooltip:not(.center-tooltip) {
+    position: fixed !important;
+    bottom: 1rem !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    top: auto !important;
+    transform: none !important;
+    max-width: none;
+  }
+
+  .onboarding-tooltip.center-tooltip {
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
+    left: 50% !important;
+    right: auto !important;
+  }
+
+  /* 移動設備上工具提示內容調整 */
+  .onboarding-tooltip-content {
+    padding: 1rem;
+  }
+
+  .onboarding-tooltip-title {
+    font-size: 1rem;
+  }
+
+  .onboarding-tooltip-description {
+    font-size: 0.8125rem;
+  }
+}
+

@@ -1,0 +1,487 @@
+/* Google Fonts Import - Must be at the top */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Klee+One:wght@400;600&display=swap');
+
+/* ===== CSS 變數定義 - 主題系統 ===== */
+
+/* Calendar Layout Variables - Always available in :root FIRST */
+:root {
+  --calendar-max-width: 1600px;
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 60px;
+}
+
+/* 現代簡約風 - 預設主題 */
+:root,
+[data-theme="modern"] {
+  /* 主要顏色 */
+  --color-primary: #1e40af;
+  --color-primary-light: #3b82f6;
+  --color-primary-dark: #1e3a8a;
+  --color-secondary: #64748b;
+  --color-accent: #60a5fa;
+  
+  /* 漸層 */
+  --gradient-header: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+  --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-hover: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  
+  /* 背景 */
+  --bg-app: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --bg-calendar: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --bg-cell: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --bg-cell-hover: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --bg-weekday: linear-gradient(135deg, #e5e7eb 0%, #f3f4f6 100%);
+  --bg-modal: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --bg-input: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  
+  /* 今日高亮 */
+  --bg-today: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  --border-today: #3b82f6;
+  --today-dot: #3b82f6;
+  
+  /* 選中狀態 */
+  --bg-selected: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  --border-selected: #3b82f6;
+  
+  /* 文字 */
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+  --text-weekday: #4b5563;
+  
+  /* 邊框 */
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-focus: #3b82f6;
+  
+  /* 陰影 */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-glow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  
+  /* 事件顏色 */
+  --event-default: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --event-allday: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --event-urgent: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  
+  /* 按鈕 */
+  --btn-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --btn-primary-hover: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  --btn-secondary: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  --btn-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --btn-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  
+  /* 控件背景（透明） */
+  --control-bg: rgba(255, 255, 255, 0.15);
+  --control-bg-hover: rgba(255, 255, 255, 0.25);
+  --control-border: rgba(255, 255, 255, 0.2);
+  
+  /* 圓角 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  
+  /* 字體 */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* 裝飾元素 */
+  --decoration-opacity: 0;
+  --decoration-filter: none;
+  
+  /* 休息時段 */
+  --bg-break: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  
+  /* Calendar Layout */
+  --calendar-max-width: 1600px; /* Main calendar container max width - easy to adjust */
+  --sidebar-width: 240px; /* Sidebar width when expanded */
+  --sidebar-width-collapsed: 60px; /* Sidebar width when collapsed */
+}
+
+/* ===== 商務藍金風 ===== */
+[data-theme="business"] {
+  /* 主要顏色 */
+  --color-primary: #1e3a5f;
+  --color-primary-light: #2c5282;
+  --color-primary-dark: #0f172a;
+  --color-secondary: #c9a227;
+  --color-accent: #d4af37;
+  
+  /* 漸層 */
+  --gradient-header: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #2c5282 100%);
+  --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-hover: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  
+  /* 背景 */
+  --bg-app: url('/themes/business-bg.svg'), linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  --bg-calendar: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --bg-cell: linear-gradient(135deg, #ffffff 0%, #fafaf9 100%);
+  --bg-cell-hover: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  --bg-weekday: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+  --bg-modal: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+  --bg-input: #ffffff;
+  --bg-overlay: rgba(15, 23, 42, 0.8);
+  
+  /* 今日高亮 */
+  --bg-today: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+  --border-today: #c9a227;
+  --today-dot: #c9a227;
+  
+  /* 選中狀態 */
+  --bg-selected: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+  --border-selected: #c9a227;
+  
+  /* 文字 - 確保在深色背景上清晰可見 */
+  --text-primary: #0f172a;
+  --text-secondary: #1e293b;
+  --text-muted: #475569;
+  --text-inverse: #ffffff;
+  --text-weekday: #ffffff;
+  
+  /* 邊框 */
+  --border-light: #e5e7eb;
+  --border-medium: #c9a227;
+  --border-focus: #c9a227;
+  
+  /* 陰影 */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 0 4px rgba(201, 162, 39, 0.2);
+  
+  /* 事件顏色 */
+  --event-default: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+  --event-allday: linear-gradient(135deg, #c9a227 0%, #b8860b 100%);
+  --event-urgent: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  
+  /* 按鈕 */
+  --btn-primary: linear-gradient(135deg, #c9a227 0%, #b8860b 100%);
+  --btn-primary-hover: linear-gradient(135deg, #d4af37 0%, #c9a227 100%);
+  --btn-secondary: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+  --btn-danger: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  --btn-success: linear-gradient(135deg, #c9a227 0%, #b8860b 100%);
+  
+  /* 控件背景 */
+  --control-bg: rgba(201, 162, 39, 0.15);
+  --control-bg-hover: rgba(201, 162, 39, 0.25);
+  --control-border: rgba(201, 162, 39, 0.3);
+  
+  /* 字體 */
+  --font-family: 'Playfair Display', 'Georgia', serif;
+  --font-family-display: 'Playfair Display', 'Georgia', serif;
+  
+  /* 裝飾 */
+  --decoration-opacity: 0.15;
+  --decoration-filter: sepia(50%) saturate(200%);
+  
+  /* 休息時段 */
+  --bg-break: linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%);
+  
+  /* Calendar Layout */
+  --calendar-max-width: 1600px;
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 60px;
+}
+
+/* ===== 夢幻粉藍風 ===== */
+[data-theme="dreamy"] {
+  /* 主要顏色 */
+  --color-primary: #ec4899;
+  --color-primary-light: #f472b6;
+  --color-primary-dark: #db2777;
+  --color-secondary: #38bdf8;
+  --color-accent: #a78bfa;
+  
+  /* 漸層 */
+  --gradient-header: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 50%, #dbeafe 100%);
+  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 231, 243, 0.6) 100%);
+  --gradient-hover: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
+  
+  /* 背景 */
+  --bg-app: linear-gradient(180deg, #fce7f3 0%, #dbeafe 50%, #fce7f3 100%);
+  --bg-calendar: rgba(255, 255, 255, 0.7);
+  --bg-cell: rgba(255, 255, 255, 0.9);
+  --bg-cell-hover: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
+  --bg-weekday: linear-gradient(135deg, rgba(244, 114, 182, 0.2) 0%, rgba(56, 189, 248, 0.2) 100%);
+  --bg-modal: linear-gradient(135deg, #ffffff 0%, #fce7f3 100%);
+  --bg-input: rgba(255, 255, 255, 0.9);
+  --bg-overlay: rgba(236, 72, 153, 0.3);
+  
+  /* 今日高亮 */
+  --bg-today: linear-gradient(135deg, #f472b6 0%, #38bdf8 100%);
+  --border-today: #ec4899;
+  --today-dot: #ffffff;
+  
+  /* 選中狀態 */
+  --bg-selected: linear-gradient(135deg, rgba(244, 114, 182, 0.3) 0%, rgba(56, 189, 248, 0.3) 100%);
+  --border-selected: #f472b6;
+  
+  /* 文字 - 調整對比度確保清晰 */
+  --text-primary: #4c1d95;
+  --text-secondary: #5b21b6;
+  --text-muted: #7c3aed;
+  --text-inverse: #ffffff;
+  --text-weekday: #9f1239;
+  
+  /* 邊框 */
+  --border-light: rgba(244, 114, 182, 0.2);
+  --border-medium: rgba(244, 114, 182, 0.4);
+  --border-focus: #f472b6;
+  
+  /* 陰影 */
+  --shadow-sm: 0 2px 8px rgba(244, 114, 182, 0.15);
+  --shadow-md: 0 4px 12px rgba(167, 139, 250, 0.2);
+  --shadow-lg: 0 25px 50px -12px rgba(236, 72, 153, 0.3);
+  --shadow-glow: 0 0 20px rgba(244, 114, 182, 0.3);
+  
+  /* 事件顏色 */
+  --event-default: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+  --event-allday: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  --event-urgent: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
+  
+  /* 按鈕 */
+  --btn-primary: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+  --btn-primary-hover: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  --btn-secondary: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  --btn-danger: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
+  --btn-success: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  
+  /* 控件背景 */
+  --control-bg: rgba(255, 255, 255, 0.4);
+  --control-bg-hover: rgba(255, 255, 255, 0.6);
+  --control-border: rgba(244, 114, 182, 0.3);
+  
+  /* 字體 */
+  --font-family: 'Quicksand', 'Nunito', sans-serif;
+  --font-family-display: 'Quicksand', 'Nunito', sans-serif;
+  
+  /* 圓角 - 更圓潤 */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  
+  /* 裝飾 */
+  --decoration-opacity: 1;
+  --decoration-filter: none;
+  
+  /* 休息時段 */
+  --bg-break: linear-gradient(135deg, rgba(244, 114, 182, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
+  
+  /* Calendar Layout */
+  --calendar-max-width: 1600px;
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 60px;
+}
+
+/* ===== 手帳拼貼風 ===== */
+[data-theme="journal"] {
+  /* 主要顏色 */
+  --color-primary: #5c4033;
+  --color-primary-light: #8b7355;
+  --color-primary-dark: #3d2817;
+  --color-secondary: #8b7355;
+  --color-accent: #2d5a27;
+  
+  /* 漸層 */
+  --gradient-header: linear-gradient(135deg, #f5e6d3 0%, #e8d4bc 100%);
+  --gradient-card: linear-gradient(135deg, #faf6f1 0%, #f5e6d3 100%);
+  --gradient-hover: linear-gradient(135deg, #fff9f0 0%, #f5e6d3 100%);
+  
+  /* 背景 */
+  --bg-app: url('/themes/journal-bg.svg'), #f5e6d3;
+  --bg-calendar: #faf6f1;
+  --bg-cell: #f5e6d3;
+  --bg-cell-hover: #fff9f0;
+  --bg-weekday: transparent;
+  --bg-modal: linear-gradient(135deg, #faf6f1 0%, #f5e6d3 100%);
+  --bg-input: #ffffff;
+  --bg-overlay: rgba(92, 64, 51, 0.5);
+  
+  /* 今日高亮 */
+  --bg-today: #fffde7;
+  --border-today: #2d5a27;
+  --today-dot: #2d5a27;
+  
+  /* 選中狀態 */
+  --bg-selected: #e8f5e9;
+  --border-selected: #2d5a27;
+  
+  /* 文字 - 調整對比度確保清晰 */
+  --text-primary: #2d1e0f;
+  --text-secondary: #3d2817;
+  --text-muted: #5c4033;
+  --text-inverse: #faf6f1;
+  --text-weekday: #1e3d1a;
+  
+  /* 邊框 */
+  --border-light: #d4c4b0;
+  --border-medium: #8b7355;
+  --border-focus: #2d5a27;
+  
+  /* 陰影 - 紙張感 */
+  --shadow-sm: 2px 2px 4px rgba(92, 64, 51, 0.1);
+  --shadow-md: 3px 3px 8px rgba(92, 64, 51, 0.15);
+  --shadow-lg: 5px 5px 15px rgba(92, 64, 51, 0.2);
+  --shadow-glow: 0 0 0 3px rgba(45, 90, 39, 0.2);
+  
+  /* 事件顏色 */
+  --event-default: linear-gradient(135deg, #8b7355 0%, #5c4033 100%);
+  --event-allday: linear-gradient(135deg, #2d5a27 0%, #1e3d1a 100%);
+  --event-urgent: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+  
+  /* 按鈕 */
+  --btn-primary: linear-gradient(135deg, #2d5a27 0%, #1e3d1a 100%);
+  --btn-primary-hover: linear-gradient(135deg, #3d7a34 0%, #2d5a27 100%);
+  --btn-secondary: linear-gradient(135deg, #8b7355 0%, #5c4033 100%);
+  --btn-danger: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+  --btn-success: linear-gradient(135deg, #2d5a27 0%, #1e3d1a 100%);
+  
+  /* 控件背景 */
+  --control-bg: rgba(92, 64, 51, 0.1);
+  --control-bg-hover: rgba(92, 64, 51, 0.2);
+  --control-border: rgba(92, 64, 51, 0.3);
+  
+  /* 字體 - 手寫感 */
+  --font-family: 'Klee One', 'Zen Maru Gothic', 'Kosugi Maru', sans-serif;
+  --font-family-display: 'Klee One', 'Zen Maru Gothic', cursive;
+  
+  /* 圓角 - 不規則感 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  
+  /* 裝飾 */
+  --decoration-opacity: 1;
+  --decoration-filter: sepia(20%);
+  
+  /* 休息時段 */
+  --bg-break: #ede4d8;
+  
+  /* Calendar Layout */
+  --calendar-max-width: 1600px;
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 60px;
+}
+
+/* ===== 可愛童趣風 ===== */
+[data-theme="kawaii"] {
+  /* 主要顏色 */
+  --color-primary: #c084fc;
+  --color-primary-light: #d8b4fe;
+  --color-primary-dark: #a855f7;
+  --color-secondary: #f472b6;
+  --color-accent: #38bdf8;
+  
+  /* 漸層 */
+  --gradient-header: linear-gradient(135deg, #fae8ff 0%, #e0e7ff 50%, #ddd6fe 100%);
+  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(250, 232, 255, 0.7) 100%);
+  --gradient-hover: linear-gradient(135deg, #fae8ff 0%, #e0e7ff 100%);
+  
+  /* 背景 */
+  --bg-app: linear-gradient(180deg, #fae8ff 0%, #e0e7ff 30%, #ddd6fe 60%, #c7d2fe 100%);
+  --bg-calendar: rgba(255, 255, 255, 0.85);
+  --bg-cell: rgba(255, 255, 255, 0.95);
+  --bg-cell-hover: linear-gradient(135deg, #fae8ff 0%, #e0e7ff 100%);
+  --bg-weekday: transparent;
+  --bg-modal: linear-gradient(135deg, #ffffff 0%, #fae8ff 100%);
+  --bg-input: rgba(255, 255, 255, 0.95);
+  --bg-overlay: rgba(192, 132, 252, 0.4);
+  
+  /* 今日高亮 */
+  --bg-today: linear-gradient(135deg, #c084fc 0%, #f472b6 100%);
+  --border-today: #38bdf8;
+  --today-dot: #38bdf8;
+  
+  /* 選中狀態 */
+  --bg-selected: linear-gradient(135deg, rgba(56, 189, 248, 0.3) 0%, rgba(192, 132, 252, 0.3) 100%);
+  --border-selected: #38bdf8;
+  
+  /* 文字 - 調整對比度確保清晰 */
+  --text-primary: #3b0764;
+  --text-secondary: #5b21b6;
+  --text-muted: #7c3aed;
+  --text-inverse: #ffffff;
+  --text-weekday: #7e22ce;
+  
+  /* 邊框 */
+  --border-light: rgba(192, 132, 252, 0.2);
+  --border-medium: rgba(192, 132, 252, 0.4);
+  --border-focus: #c084fc;
+  
+  /* 陰影 */
+  --shadow-sm: 0 2px 8px rgba(192, 132, 252, 0.2);
+  --shadow-md: 0 4px 15px rgba(192, 132, 252, 0.25);
+  --shadow-lg: 0 20px 40px rgba(192, 132, 252, 0.3);
+  --shadow-glow: 0 0 25px rgba(56, 189, 248, 0.4);
+  
+  /* 事件顏色 */
+  --event-default: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+  --event-allday: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  --event-urgent: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+  
+  /* 按鈕 - 雲朵造型 */
+  --btn-primary: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  --btn-primary-hover: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  --btn-secondary: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+  --btn-danger: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+  --btn-success: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  
+  /* 控件背景 */
+  --control-bg: rgba(255, 255, 255, 0.5);
+  --control-bg-hover: rgba(255, 255, 255, 0.7);
+  --control-border: rgba(192, 132, 252, 0.3);
+  
+  /* 字體 */
+  --font-family: 'Nunito', 'Comic Neue', 'Varela Round', sans-serif;
+  --font-family-display: 'Nunito', 'Comic Neue', cursive;
+  
+  /* 圓角 - 超圓潤 */
+  --radius-sm: 16px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  
+  /* 裝飾 */
+  --decoration-opacity: 1;
+  --decoration-filter: none;
+  
+  /* 休息時段 */
+  --bg-break: linear-gradient(135deg, rgba(192, 132, 252, 0.1) 0%, rgba(244, 114, 182, 0.1) 100%);
+  
+  /* Calendar Layout */
+  --calendar-max-width: 1600px;
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 60px;
+}
+
+/* ===== 全域樣式 ===== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-app);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text-primary);
+  transition: background 0.5s ease, color 0.3s ease;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
