@@ -68,7 +68,7 @@ Bot 擔任「地下城主 (DM)」的角色。使用者傳送文字指令（如�
    建立 `.env.local` 檔案，並填入以下內容：
    ```bash
    # MongoDB 連線字串
-   MONGODB_URI=mongodb+srv://your_db_user:password@cluster.mongodb.net/dbname
+   MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
 
    # Line Bot 設定 (Line Developers Console)
    LINE_CHANNEL_ID=your_channel_id

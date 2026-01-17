@@ -16,7 +16,7 @@
 
 ### 3. MongoDB
 - [ ] `MONGODB_URI` - MongoDB Atlas 連接字符串
-  - 格式：`mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority`
+  - 格式：`mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority`
 
 ### 4. GitHub OAuth（可選）
 - [ ] `GITHUB_CLIENT_ID` - GitHub OAuth App Client ID
